@@ -101,7 +101,9 @@ func (a *Adb) Initialize() error {
 
 // GetPhysicalSize 获取：分辨率（宽高、尺寸）.
 func (a *Adb) GetPhysicalSize() (width int, height int, err error) {
-	// 执行命令：adb -s 127.0.0.1:5555 shell wm size
+	/*
+		执行命令：adb -s 127.0.0.1:5555 shell wm size
+	*/
 	str, err := cmdKit.RunCombinedlyToString(context.TODO(), "adb", "-s", a.address, "shell", "wm", "size")
 	if err != nil {
 		return 0, 0, errorKit.Wrapf(err, "fail to run 'adb -s %s shell wm size'", a.address)
@@ -137,7 +139,9 @@ func (a *Adb) Screenshot(targetPath string) error {
 	a.screenshotMutex.Lock()
 	defer a.screenshotMutex.Unlock()
 
-	// adb -s {a.address} exec-out screencap -p
+	/*
+		执行命令：adb -s 127.0.0.1:5555 exec-out screencap -p
+	*/
 	data, err := cmdKit.RunCombinedly(context.TODO(), "adb", "-s", a.address, "exec-out", "screencap", "-p")
 	if err != nil {
 		return errorKit.Wrapf(err, "fail to run 'adb -s %s exec-out screencap -p'", a.address)
@@ -154,4 +158,24 @@ func (a *Adb) Screenshot(targetPath string) error {
 	}
 
 	return nil
+}
+
+// Tap 点击.
+/*
+	命令：adb -s 127.0.0.1:5555 shell input tap <x> <y>
+*/
+func (a *Adb) Tap(x, y int) error {
+	_, err := cmdKit.RunCombinedly(context.TODO(), "adb", "-s", a.address, "shell", "input", "tap", intKit.IntToString(x), intKit.IntToString(y))
+	return err
+}
+
+// LongPress 长按.
+/*
+	命令：adb -s 127.0.0.1:5555 shell input swipe 500 1000 500 1000 2000
+
+	@param ms 长按的时间（单位：ms）
+*/
+func (a *Adb) LongPress(x, y int, ms int) error {
+	_, err := cmdKit.RunCombinedly(context.TODO(), "adb", "-s", a.address, "shell", "input", "swipe", intKit.IntToString(x), intKit.IntToString(y), intKit.IntToString(x), intKit.IntToString(y), intKit.IntToString(ms))
+	return err
 }
