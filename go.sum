@@ -153,8 +153,8 @@ github.com/redis/go-redis/v9 v9.17.3 h1:fN29NdNrE17KttK5Ndf20buqfDZwGNgoUr9qjl1D
 github.com/redis/go-redis/v9 v9.17.3/go.mod h1:u410H11HMLoB+TP67dz8rL9s6QW2j76l0//kSOd3370=
 github.com/refraction-networking/utls v1.8.1 h1:yNY1kapmQU8JeM1sSw2H2asfTIwWxIkrMJI0pRUOCAo=
 github.com/refraction-networking/utls v1.8.1/go.mod h1:jkSOEkLqn+S/jtpEHPOsVv/4V4EVnelwbMQl4vCWXAM=
-github.com/richelieu042/chimera/v3 v3.26.104 h1:1kLx1jFyNVtVMJdjSWxkZ5HcdaK+1MCAVvzLhHXKf/M=
-github.com/richelieu042/chimera/v3 v3.26.104/go.mod h1:r+m4/7IJbLmoNa9fpTVhx4uh8e0b2MBVWr6Ap4S9nxg=
+github.com/richelieu042/chimera/v3 v3.26.108 h1:rtHydCJiweu9SkWxEqkhOryqy70NGpqLjzFVwNp7Fcg=
+github.com/richelieu042/chimera/v3 v3.26.108/go.mod h1:r+m4/7IJbLmoNa9fpTVhx4uh8e0b2MBVWr6Ap4S9nxg=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/robfig/cron/v3 v3.0.1 h1:WdRxkvbJztn8LMz/QEvLN5sBU+xKpSqwwUO1Pjr4qDs=

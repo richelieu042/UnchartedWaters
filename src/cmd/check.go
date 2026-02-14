@@ -23,9 +23,10 @@ func checkAdbEnv() (success bool) {
 		console.Errorf("Check failed, error: %s", err)
 		return
 	}
+
 	console.Infof("adb path: %s", path)
 	console.Infof("adb version: \n%s", version)
-	console.Info("Check successfully.")
+	console.Info("Check adb environment successfully.")
 	success = true
 	return
 }

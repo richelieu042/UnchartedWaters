@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	os.Args = []string{"uw", "-h"}
-	//os.Args = []string{"uw", "clean"}
+	os.Args = []string{"uw", "--addr", "127.0.0.1:5555", "--clean", "--verbose"}
+	//os.Args = []string{"uw", "-h"}
 	if err := cmd.Execute(); err != nil {
 		panic(err)
 	}
