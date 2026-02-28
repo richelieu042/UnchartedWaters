@@ -34,7 +34,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 	console.Infof("clean: [%t]", clean)
 	console.Infof("verbose: [%t]", verbose)
 
-	enc := zapKit.NewEncoder( /*zapKit.WithEncoderMessagePrefix("[ABD] ")*/)
+	enc := zapKit.NewEncoder()
 	var level zapcore.Level
 	if verbose {
 		level = zap.DebugLevel
