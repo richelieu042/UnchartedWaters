@@ -34,7 +34,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 	console.Infof("clean: [%t]", clean)
 	console.Infof("verbose: [%t]", verbose)
 
-	enc := zapKit.NewEncoder( /*zapKit.WithEncoderMessagePrefix("[ABD] ")*/ )
+	enc := zapKit.NewEncoder( /*zapKit.WithEncoderMessagePrefix("[ABD] ")*/)
 	var level zapcore.Level
 	if verbose {
 		level = zap.DebugLevel
@@ -46,7 +46,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 
 	client, err := adbKit.NewClient(addr, clean, logger)
 	if err != nil {
-		console.Errorf("NewInstance failed, error %s", err)
+		console.Error("Fail to new adb client.", zap.Error(err))
 		return
 	}
 	logic.Start(client, logger)
