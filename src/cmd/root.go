@@ -47,7 +47,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 
 	client, err := adbKit.NewClient(addr, clean, logger)
 	if err != nil {
-		console.Error("Fail to new adb client.", zap.Error(err))
+		console.Panic("Fail to new adb client.", zap.Error(err))
 		return
 	}
 	logic.Start(client, logger)
