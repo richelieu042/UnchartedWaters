@@ -17,11 +17,13 @@ func Start(adbClient adbKit.Client, logger *zap.SugaredLogger) {
 	// 目前仅支持 1920x1080 尺寸
 	w, h, err := adbClient.GetPhysicalSize()
 	if err != nil {
-		panic(err)
+		logger.Panic("Fail to get physical size.", zap.Error(err))
+		return
 	}
 	logger.Infof("physical size: [%dx%d]", w, h)
 	if w != 1920 || h != 1080 {
-		logger.Panicf("unsupported size: %dx%d", w, h)
+		logger.Panic("unsupported size.", zap.Int("width", w), zap.Int("height", h))
+		return
 	}
 
 	for {
