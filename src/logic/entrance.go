@@ -27,12 +27,6 @@ func Start(adbClient adbKit.Client, logger *zap.SugaredLogger) {
 	}
 
 	for {
-		var l *zap.Logger
-
-		l.With()
-
-		logger.With()
-
 		// 随机睡眠
 		randInt := randomKit.Int(1000, 2001)
 		duration := time.Millisecond * time.Duration(randInt)
@@ -59,14 +53,17 @@ func Start(adbClient adbKit.Client, logger *zap.SugaredLogger) {
 		}
 		console.Infof("dirPath: [%s]", dirPath)
 
+		// 子logger
+		l := logger.With(zap.String("dirPath", dirPath))
+
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
 		if err := adbClient.Screenshot(imgPath); err != nil {
-			logger.Errorf("adbClient.Screenshot() failed: %s", err)
+			l.Errorf("adbClient.Screenshot() failed: %s", err)
 			continue
 		}
 
 		{
-			_, _, _ = IsSailing(dirPath, imgPath, logger)
+			_, _, _ = IsSailing(dirPath, imgPath, l)
 		}
 
 		//start := time.Now()

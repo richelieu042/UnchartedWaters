@@ -26,7 +26,7 @@ func IsSailing(dirPath, imgPath string, logger *zap.SugaredLogger) (bool, float6
 	if err != nil {
 		return false, days, err
 	}
-	text, err := gosseractKit.GertText(clippedImgPath)
+	text, err := gosseractKit.GertText(clippedImgPath, "chi_sim")
 	if err != nil {
 		return false, days, err
 	}
