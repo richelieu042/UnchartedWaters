@@ -13,7 +13,7 @@ import (
 )
 
 // IsSailing 是否在航行页面？
-func IsSailing(dirPath, imgPath string, logger *zap.SugaredLogger) (bool, float64, error) {
+func IsSailing(dirPath, imgPath string, logger *zap.Logger) (bool, float64, error) {
 	x0 := 748
 	y0 := 995
 	x1 := 962
@@ -30,17 +30,17 @@ func IsSailing(dirPath, imgPath string, logger *zap.SugaredLogger) (bool, float6
 	if err != nil {
 		return false, days, err
 	}
-	logger.Debugf("text: [%s]", text)
+	logger.Sugar().Debugf("text: [%s]", text)
 
 	sailing := strKit.Index(text, "航行中") != -1
-	logger.Debugf("航行中: [%t]", sailing)
+	logger.Sugar().Debugf("航行中: [%t]", sailing)
 
 	if sailing {
 		days, err = getDays(text)
 		if err != nil {
 			logger.Error("获取剩余航行天数失败！", zap.Error(err))
 		} else {
-			logger.Debugf("天数: [%.2f]", days)
+			logger.Sugar().Debugf("天数: [%.2f]", days)
 		}
 	}
 

@@ -39,11 +39,11 @@ func rootRun(cmd *cobra.Command, args []string) {
 		level = zap.InfoLevel
 	}
 	core := zapKit.NewCore(enc, os.Stdout, level)
-	logger := zapKit.NewLogger(core).Sugar()
+	logger := zapKit.NewLogger(core)
 
-	logger.Infof("addr: [%s]", addr)
-	logger.Infof("clean: [%t]", clean)
-	logger.Infof("verbose: [%t]", verbose)
+	logger.Sugar().Infof("addr: [%s]", addr)
+	logger.Sugar().Infof("clean: [%t]", clean)
+	logger.Sugar().Infof("verbose: [%t]", verbose)
 
 	client, err := adbKit.NewClient(addr, clean, logger)
 	if err != nil {
