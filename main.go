@@ -4,8 +4,6 @@ import (
 	"os"
 
 	"github.com/richelieu-yang/UnchartedWaters/src/cmd"
-	"github.com/richelieu042/chimera/v3/src/log/console"
-	"go.uber.org/zap"
 )
 
 func main() {
@@ -17,6 +15,6 @@ func main() {
 	}
 
 	if err := cmd.Execute(); err != nil {
-		console.Panic("Execute failed", zap.Error(err))
+		panic(err)
 	}
 }

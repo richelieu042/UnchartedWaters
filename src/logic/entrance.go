@@ -53,7 +53,7 @@ func Start(adbClient adbKit.Client, logger *zap.SugaredLogger) {
 		}
 		console.Infof("dirPath: [%s]", dirPath)
 
-		// 子logger
+		// 子logger，后续的输出都用它
 		l := logger.With(zap.String("dirPath", dirPath))
 
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
