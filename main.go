@@ -12,7 +12,7 @@ func main() {
 	/* test */
 	{
 		//addr := "127.0.0.1:5585"
-		addr := "127.0.0.1:5588"
+		addr := "127.0.0.1:5585"
 		os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose"}
 	}
 

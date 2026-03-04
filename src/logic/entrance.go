@@ -49,7 +49,8 @@ func Start(adbClient adbKit.Client, logger *zap.SugaredLogger) {
 		*/
 		dirPath := pathKit.Join("__tmp",
 			strKit.ReplaceAll(adbClient.GetAddress(), ":", "_"),
-			timeKit.Format(now, "2006-01-02T15.04"),
+			timeKit.Format(now, "2006-01-02"),
+			timeKit.Format(now, "15.04"),
 			timeKit.Format(now, "05.000"),
 		)
 		if err := fileKit.MkDirs(dirPath); err != nil {
