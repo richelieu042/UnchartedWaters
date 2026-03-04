@@ -30,17 +30,17 @@ func IsSailing(dirPath, imgPath string, logger *zap.SugaredLogger) (bool, float6
 	if err != nil {
 		return false, days, err
 	}
-	logger.Infof("text: [%s]", text)
+	logger.Debugf("text: [%s]", text)
 
 	sailing := strKit.Index(text, "航行中") != -1
-	logger.Infof("航行中: [%t]", sailing)
+	logger.Debugf("航行中: [%t]", sailing)
 
 	if sailing {
 		days, err = getDays(text)
 		if err != nil {
-			logger.Errorf("获取天数失败, error: %s", err)
+			logger.Error("获取剩余航行天数失败！", zap.Error(err))
 		} else {
-			logger.Infof("天数: [%.2f]", days)
+			logger.Debugf("天数: [%.2f]", days)
 		}
 	}
 
