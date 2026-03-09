@@ -70,7 +70,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 				if sailFlag {
 					if days < 0 {
 						l.Warn("Is sailing, but fail to get left days.", zap.Float64("days", days))
-					} else if days < 0.5 {
+					} else if days < 0.3 {
 						l.Info("Is sailing, but left days is too few, do nothing.", zap.Float64("days", days))
 					} else {
 						// TODO:
