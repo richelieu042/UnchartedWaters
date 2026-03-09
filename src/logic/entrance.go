@@ -96,12 +96,5 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 				console.Info("Not sailing.")
 			}
 		}
-
-		//start := time.Now()
-		//if err := ins.Screenshot(imgName); err != nil {
-		//	console.Errorf("a.Screenshot() failed: %s", err)
-		//	continue
-		//}
-		//console.Infof("screenshot: %s, cost: %s", imgName, time.Since(start))
 	}
 }
