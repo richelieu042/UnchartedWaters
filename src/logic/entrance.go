@@ -62,19 +62,21 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			continue
 		}
 
+		/* （1）航行中 */
 		{
 			sailFlag, days, err := IsSailing(dirPath, imgPath, l)
 			if err != nil {
-				l.Error("IsSailing fails.", zap.Error(err))
+				l.Error("IsSailing() fails.", zap.Error(err))
 			} else {
+				console.Infof("Is sailing? [%t]", sailFlag)
+
 				if sailFlag {
 					if days < 0 {
-						l.Warn("Is sailing, but fail to get left days.", zap.Float64("days", days))
+						l.Warn("Fail to get left days.", zap.Float64("days", days))
 					} else if days < 0.3 {
-						l.Info("Is sailing, but left days is too few, do nothing.", zap.Float64("days", days))
+						l.Info("Left days is too few, do nothing.", zap.Float64("days", days))
 					} else {
-						// TODO:
-						l.Info("Is sailing.", zap.Float64("days", days))
+						l.Info("Left days is enough.", zap.Float64("days", days))
 
 						// 模拟点击
 						points := []*adbKit.Point{
@@ -93,8 +95,12 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 					}
 					continue
 				}
-				console.Info("Not sailing.")
 			}
+		}
+
+		/* （2）战斗中 */
+		{
+
 		}
 	}
 }
