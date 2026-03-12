@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"time"
 
+	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/image/imageKit"
@@ -12,8 +14,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// IsSailing 是否在航行页面？
-func IsSailing(dirPath, imgPath string, logger *zap.Logger) (bool, float64, error) {
+// isSailing 是否在航行页面？
+func isSailing(logger *zap.Logger, dirPath, imgPath string) (bool, float64, error) {
 	x0 := 748
 	y0 := 995
 	x1 := 962
@@ -56,4 +58,33 @@ func getDays(s string) (float64, error) {
 		return strconv.ParseFloat(match[1], 64)
 	}
 	return 0, fmt.Errorf("invalid string: %s", s)
+}
+
+// processSailing 处理航行中
+/*
+@param days 剩余航行天数
+*/
+func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
+	if days < 0 {
+		l.Warn("Fail to get left days.", zap.Float64("days", days))
+	} else if days < 0.3 {
+		l.Info("Left days is too few, do nothing.", zap.Float64("days", days))
+	} else {
+		l.Info("Left days is enough.", zap.Float64("days", days))
+
+		// 模拟点击
+		points := []*adbKit.Point{
+			{X: 1168, Y: 708},
+			{X: 1168, Y: 861},
+			{X: 1315, Y: 706},
+		}
+		for i, point := range points {
+			if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
+				l.Error("Fail to tap as human beings.", zap.Int("index", i))
+			} else {
+				l.Info("Manager to tap as human beings.", zap.Int("index", i))
+			}
+			time.Sleep(time.Millisecond * 500)
+		}
+	}
 }

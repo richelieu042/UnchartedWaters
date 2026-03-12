@@ -64,35 +64,14 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 
 		/* （1）航行中 */
 		{
-			sailFlag, days, err := IsSailing(dirPath, imgPath, l)
+			sailFlag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
-				l.Error("IsSailing() fails.", zap.Error(err))
+				l.Error("isSailing() fails.", zap.Error(err))
 			} else {
 				console.Infof("Is sailing? [%t]", sailFlag)
 
 				if sailFlag {
-					if days < 0 {
-						l.Warn("Fail to get left days.", zap.Float64("days", days))
-					} else if days < 0.3 {
-						l.Info("Left days is too few, do nothing.", zap.Float64("days", days))
-					} else {
-						l.Info("Left days is enough.", zap.Float64("days", days))
-
-						// 模拟点击
-						points := []*adbKit.Point{
-							{X: 1168, Y: 708},
-							{X: 1168, Y: 861},
-							{X: 1315, Y: 706},
-						}
-						for i, point := range points {
-							if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
-								l.Error("Fail to tap as human beings.", zap.Int("index", i))
-							} else {
-								l.Info("Manager to tap as human beings.", zap.Int("index", i))
-							}
-							time.Sleep(time.Millisecond * 500)
-						}
-					}
+					processSailing(adbClient, l, days)
 					continue
 				}
 			}
