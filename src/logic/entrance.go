@@ -17,12 +17,12 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 	// 目前仅支持 1920x1080 尺寸
 	w, h, err := adbClient.GetPhysicalSize()
 	if err != nil {
-		logger.Panic("Fail to get physical size.", zap.Error(err))
+		logger.Sugar().Panicf("Fail to get physical size, error: %+v", err)
 		return
 	}
 	logger.Info("physical size", zap.Int("width", w), zap.Int("height", h))
 	if w != 1920 || h != 1080 {
-		logger.Panic("unsupported size.", zap.Int("width", w), zap.Int("height", h))
+		logger.Panic("Size is unsupported!!!", zap.Int("width", w), zap.Int("height", h))
 		return
 	}
 

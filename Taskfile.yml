@@ -4,9 +4,9 @@ version: '3'
 vars:
   # 输出目录（这个别瞎改，以免删库跑路！！！）
   OUTPUT_DIR: ./__output__
-  APP: test
+  APP: uw
   SOURCE: main.go
-  CGO_ENABLED: 0
+  CGO_ENABLED: 1
   VERSION: 0.0.1
   BUILDER:
     sh: whoami
@@ -34,6 +34,7 @@ tasks:
     cmds:
       - task: windows-386
       - task: windows-amd64
+      - task: windows-amd64-noavx
       - task: darwin-arm64
       - task: linux-amd64
       - task: linux-amd64-noavx

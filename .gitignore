@@ -27,3 +27,4 @@ go.work.sum
 
 .idea
 __tmp
+__output__
