@@ -1,0 +1,131 @@
+version: '3'
+
+# 全局变量
+vars:
+  # 输出目录（这个别瞎改，以免删库跑路！！！）
+  OUTPUT_DIR: ./__output__
+  APP: test
+  SOURCE: main.go
+  CGO_ENABLED: 0
+  VERSION: 0.0.1
+  BUILDER:
+    sh: whoami
+  BUILD_DATE:
+    sh: date '+%F'
+  BUILD_TIME:
+    sh: date '+%FT%T %A %Z'
+  # 0: 不进行混淆; 1: 进行混淆（通过 garble）
+  OBFUSCATE: 0
+  GARBLE_FLAGS: "-seed=kaach9AA8YlxRgeALT77NA -literals"
+
+tasks:
+  default:
+    cmds:
+      - task: prepare
+      #      - task: build-serial
+      - task: build-parallel
+
+  prepare:
+    cmds:
+      #      - go install mvdan.cc/garble@latest
+      - go mod tidy
+
+  build-serial:
+    cmds:
+      - task: windows-386
+      - task: windows-amd64
+      - task: darwin-arm64
+      - task: linux-amd64
+      - task: linux-amd64-noavx
+      - task: linux-arm64
+      - task: linux-mips64
+      - task: linux-mips64le
+      - task: linux-loong64
+
+  build-parallel:
+    deps:
+      - task: windows-386
+      - task: windows-amd64
+      - task: windows-amd64-noavx
+      - task: darwin-arm64
+      - task: linux-amd64
+      - task: linux-amd64-noavx
+      - task: linux-arm64
+      - task: linux-mips64
+      - task: linux-mips64le
+      - task: linux-loong64
+
+  windows-386:
+    cmds:
+      - task: build
+        vars: { OS: windows, ARCH: 386, CC: i686-w64-mingw32-gcc, CXX: i686-w64-mingw32-g++, TAGS: "", UPX: true }
+
+  windows-amd64:
+    cmds:
+      - task: build
+        vars: { OS: windows, ARCH: amd64, CC: x86_64-w64-mingw32-gcc, CXX: x86_64-w64-mingw32-g++, TAGS: "sonic avx", UPX: true }
+
+  windows-amd64-noavx:
+    cmds:
+      - task: build
+        vars: { OS: windows, ARCH: amd64, CC: x86_64-w64-mingw32-gcc, CXX: x86_64-w64-mingw32-g++, TAGS: "", UPX: true }
+
+  darwin-arm64:
+    cmds:
+      - task: build
+        vars: { OS: darwin, ARCH: arm64, TAGS: "sonic", UPX: false }
+
+  linux-amd64:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: amd64, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "sonic avx", UPX: true }
+
+  linux-amd64-noavx:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: amd64, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "", UPX: true }
+
+  linux-arm64:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: arm64, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "sonic", UPX: true }
+
+  linux-mips64:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: mips64, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "", UPX: false }
+
+  linux-mips64le:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: mips64le, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "", UPX: false }
+
+  linux-loong64:
+    cmds:
+      - task: build
+        vars: { OS: linux, ARCH: loong64, CC: x86_64-linux-musl-gcc, CXX: x86_64-linux-musl-g++, TAGS: "", UPX: false }
+
+  build:
+    vars:
+      OS: '{{default "UNKNOWN" .OS}}'
+      ARCH: '{{default "UNKNOWN" .ARCH}}'
+      CC: '{{default "cc" .CC}}'
+      CXX: '{{default "c++" .CXX}}'
+      EXT: '{{if eq .OS "windows"}}.exe{{end}}'
+      TAGS: '{{default "" .TAGS}}'
+      UPX: '{{default "false" .UPX}}'
+      NOAVX: '{{if and (eq .ARCH "amd64") (ne .TAGS "sonic avx")}}-noavx{{end}}'
+      NAME: '{{.APP}}-{{.OS}}-{{.ARCH}}{{.NOAVX}}{{.EXT}}'
+      TARGET: '{{.OUTPUT_DIR}}/{{.NAME}}'
+    cmds:
+      - echo "Building {{.TARGET}}"
+      - rm -rf {{.TARGET}}  # 文件可以不存在
+      - |
+        if [ {{.CGO_ENABLED}} -eq 1 ]; then
+          echo "CGO_ENABLED={{.CGO_ENABLED}} CC={{.CC}} CXX={{.CXX}} GOOS={{.OS}} GOARCH={{.ARCH}} go build -o {{.TARGET}} -ldflags \"-X 'main.Version={{.VERSION}}' -X 'main.Builder={{.BUILDER}}' -X 'main.BuildTime={{.BUILD_TIME}}' -s -w\" -tags=\"{{.TAGS}}\" {{.SOURCE}}"
+          CGO_ENABLED={{.CGO_ENABLED}} CC={{.CC}} CXX={{.CXX}} GOOS={{.OS}} GOARCH={{.ARCH}} go build -o {{.TARGET}} -ldflags "-X 'main.Version={{.VERSION}}' -X 'main.Builder={{.BUILDER}}' -X 'main.BuildTime={{.BUILD_TIME}}' -s -w" -tags="{{.TAGS}}" {{.SOURCE}}
+        else
+          echo "CGO_ENABLED={{.CGO_ENABLED}} GOOS={{.OS}} GOARCH={{.ARCH}} go build -o {{.TARGET}} -ldflags \"-X 'main.Version={{.VERSION}}' -X 'main.Builder={{.BUILDER}}' -X 'main.BuildTime={{.BUILD_TIME}}' -s -w\" -tags=\"{{.TAGS}}\" {{.SOURCE}}"
+          CGO_ENABLED={{.CGO_ENABLED}} GOOS={{.OS}} GOARCH={{.ARCH}} go build -o {{.TARGET}} -ldflags "-X 'main.Version={{.VERSION}}' -X 'main.Builder={{.BUILDER}}' -X 'main.BuildTime={{.BUILD_TIME}}' -s -w" -tags="{{.TAGS}}" {{.SOURCE}}
+        fi
+      - if [ {{.UPX}} == "true" ]; then upx -9 {{.TARGET}}; fi
