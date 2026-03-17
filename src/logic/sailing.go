@@ -66,7 +66,7 @@ func getDays(s string) (float64, error) {
 /*
 @param days 剩余航行天数
 */
-func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
+func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days float64) {
 	if days < 0 {
 		l.Warn("Fail to get left days.", zap.Float64("days", days))
 		return
@@ -87,14 +87,32 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
 		{X: 1315, Y: 706},
 	}
 	for i, point := range points {
-		limiter.Take()
+		limiter.Take() // 等一会
 		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
-			l.Error("Fail to tap as human beings.", zap.Int("index", i))
-		} else {
-			l.Info("Manager to tap as human beings.", zap.Int("index", i))
+			l.Error("Fail to tap as human beings.", zap.String("op", "event"), zap.Int("index", i))
+			return
 		}
+		l.Info("Manager to tap as human beings.", zap.String("op", "event"), zap.Int("index", i))
 	}
 
 	// (2) 送礼
+	{
+		op := "gift"
+		templPath := "images/sail/gift.png"
+
+		if !matchAndTap(adbClient, l, op, imgPath, templPath, limiter) {
+			return
+		}
+	}
+
+	// (3) 测量
+	{
+		op := "measure"
+		templPath := "images/sail/measure.png"
+
+		if !matchAndTap(adbClient, l, op, imgPath, templPath, limiter) {
+			return
+		}
+	}
 
 }

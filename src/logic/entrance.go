@@ -71,7 +71,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 				console.Infof("Is sailing? [%t]", sailFlag)
 
 				if sailFlag {
-					processSailing(adbClient, l, days)
+					processSailing(adbClient, l, imgPath, days)
 					continue
 				}
 			}
