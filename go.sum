@@ -164,8 +164,8 @@ github.com/quic-go/quic-go v0.59.0 h1:OLJkp1Mlm/aS7dpKgTc6cnpynnD2Xg7C1pwL6vy/SA
 github.com/quic-go/quic-go v0.59.0/go.mod h1:upnsH4Ju1YkqpLXC305eW3yDZ4NfnNbmQRCMWS58IKU=
 github.com/redis/go-redis/v9 v9.18.0 h1:pMkxYPkEbMPwRdenAzUNyFNrDgHx9U+DrBabWNfSRQs=
 github.com/redis/go-redis/v9 v9.18.0/go.mod h1:k3ufPphLU5YXwNTUcCRXGxUoF1fqxnhFQmscfkCoDA0=
-github.com/richelieu042/chimera/v3 v3.26.126 h1:MhKqM3L0jzCPtK+9z+SHED1ZDzFOoTw7Iw2zKA6eibI=
-github.com/richelieu042/chimera/v3 v3.26.126/go.mod h1:gZUSSaBwLLVG3qIdQUn1lWIuqSpSqkCjtpkx2XbAYDk=
+github.com/richelieu042/chimera/v3 v3.26.127 h1:F3t58PU6qzZhi0zBpkY6g5nFqW1CWWFYAcjRNZGz/uw=
+github.com/richelieu042/chimera/v3 v3.26.127/go.mod h1:ZWpJhZiQQ/dZXC2AnQ/6nUIYCSvexkSaAOk7c7uMsxY=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/robfig/cron/v3 v3.0.1 h1:WdRxkvbJztn8LMz/QEvLN5sBU+xKpSqwwUO1Pjr4qDs=
