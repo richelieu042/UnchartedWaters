@@ -100,8 +100,31 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		op := "gift"
 		templPath := "images/sail/gift.png"
 
-		if !matchAndTap(adbClient, l, op, imgPath, templPath, limiter) {
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		switch flag {
+		case 0, 2:
 			return
+		case 1, 3: // 继续向下走
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+		}
+	}
+
+	// (3) 取消（右下角的）折叠
+	{
+		op := "cancel fold"
+		templPath := "images/sail/folded.png"
+
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		switch flag {
+		case 0, 2:
+			return
+		case 1:
+			// 未折叠，继续向下走
+		case 3:
+			return // 折叠已取消，等下个循环
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
 		}
 	}
 
@@ -110,9 +133,13 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		op := "measure"
 		templPath := "images/sail/measure.png"
 
-		if !matchAndTap(adbClient, l, op, imgPath, templPath, limiter) {
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		switch flag {
+		case 0, 2:
 			return
+		case 1, 3: // 继续向下走
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
 		}
 	}
-
 }
