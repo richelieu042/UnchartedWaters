@@ -7,10 +7,12 @@ import (
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
+	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/image/imageKit"
 	"github.com/richelieu042/chimera/v3/src/ocr/gosseractKit"
+	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 )
 
@@ -67,24 +69,29 @@ func getDays(s string) (float64, error) {
 func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
 	if days < 0 {
 		l.Warn("Fail to get left days.", zap.Float64("days", days))
+		return
 	} else if days < 0.3 {
 		l.Info("Left days is too few, do nothing.", zap.Float64("days", days))
-	} else {
-		l.Info("Left days is enough.", zap.Float64("days", days))
+		return
+	}
 
-		// 模拟点击
-		points := []*adbKit.Point{
-			{X: 1168, Y: 708},
-			{X: 1168, Y: 861},
-			{X: 1315, Y: 706},
-		}
-		for i, point := range points {
-			if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
-				l.Error("Fail to tap as human beings.", zap.Int("index", i))
-			} else {
-				l.Info("Manager to tap as human beings.", zap.Int("index", i))
-			}
-			time.Sleep(time.Millisecond * 500)
+	l.Info("Left days is enough.", zap.Float64("days", days))
+
+	// 限流器：避免短时间内操作太多次
+	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
+
+	// 模拟点击
+	points := []*adbKit.Point{
+		{X: 1168, Y: 708},
+		{X: 1168, Y: 861},
+		{X: 1315, Y: 706},
+	}
+	for i, point := range points {
+		limiter.Take()
+		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
+			l.Error("Fail to tap as human beings.", zap.Int("index", i))
+		} else {
+			l.Info("Manager to tap as human beings.", zap.Int("index", i))
 		}
 	}
 }

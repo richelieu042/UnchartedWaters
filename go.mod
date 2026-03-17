@@ -3,12 +3,14 @@ module github.com/richelieu-yang/UnchartedWaters
 go 1.26.1
 
 require (
-	github.com/richelieu042/chimera/v3 v3.26.127
+	github.com/richelieu042/chimera/v3 v3.26.130
 	github.com/spf13/cobra v1.10.2
+	go.uber.org/ratelimit v0.3.1
 	go.uber.org/zap v1.27.1
 )
 
 require (
+	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/boyter/go-string v1.0.5 // indirect
 	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.15.0 // indirect
@@ -80,4 +82,5 @@ require (
 	golang.org/x/image v0.37.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/time v0.15.0 // indirect
 )
