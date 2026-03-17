@@ -80,7 +80,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
-	// 模拟点击 3 处事件点
+	// (1) 模拟点击 3 处事件点
 	points := []*adbKit.Point{
 		{X: 1168, Y: 708},
 		{X: 1168, Y: 861},
@@ -94,4 +94,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, days float64) {
 			l.Info("Manager to tap as human beings.", zap.Int("index", i))
 		}
 	}
+
+	// (2) 送礼
+
 }
