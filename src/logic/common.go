@@ -37,9 +37,9 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 
 	limiter.Take() // 等一会
 	if err := adbClient.TapAsHumanBeings(matchRect.Min.X+matchRect.Dx()/2, matchRect.Min.Y+matchRect.Dy()/2, 10); err != nil {
-		l.Error("Fail to tap as human beings.", zap.String("op", op))
+		l.Error("Fail to tap.", zap.String("op", op))
 		return 2
 	}
-	l.Info("Manager to tap as human beings.", zap.String("op", op))
+	l.Info("Manager to tap.", zap.String("op", op))
 	return 3
 }

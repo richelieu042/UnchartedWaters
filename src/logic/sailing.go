@@ -90,10 +90,10 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	for i, point := range points {
 		limiter.Take() // 等一会
 		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
-			l.Error("Fail to tap as human beings.", zap.String("op", "event"), zap.Int("index", i))
+			l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
 			return
 		}
-		l.Info("Manager to tap as human beings.", zap.String("op", "event"), zap.Int("index", i))
+		l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
 	}
 
 	// (2) 送礼
