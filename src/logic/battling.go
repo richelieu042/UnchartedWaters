@@ -25,6 +25,9 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 	return true, nil
 }
 
+/*
+TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点击最右边从上往下数第三个图标（需要设置好策略，目前只能“召唤副舰”，使得无论怎么切换，那个位置一直是“召唤副舰”）
+*/
 func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
@@ -49,21 +52,21 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 		}
 	}
 
-	// (1) 召唤海军
-	{
-		op := "navy"
-		templPath := "images/battle/navy.png"
-
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
-		switch flag {
-		case 0, 2:
-			return // 中断
-		case 1, 3:
-			// 继续向下走
-		default:
-			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
-		}
-	}
+	//// (1) 召唤海军
+	//{
+	//	op := "navy"
+	//	templPath := "images/battle/navy.png"
+	//
+	//	flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+	//	switch flag {
+	//	case 0, 2:
+	//		return // 中断
+	//	case 1, 3:
+	//		// 继续向下走
+	//	default:
+	//		l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+	//	}
+	//}
 
 	// (2) 召唤副舰
 	{

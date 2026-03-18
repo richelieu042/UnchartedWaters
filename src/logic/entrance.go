@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	defInterval = 3000
+	defInterval = 1_000
 )
 
 var (
