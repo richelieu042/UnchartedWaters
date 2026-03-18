@@ -7,7 +7,6 @@ import (
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/file/fileKit"
-	"github.com/richelieu042/chimera/v3/src/log/console"
 	"github.com/richelieu042/chimera/v3/src/randomKit"
 	"github.com/richelieu042/chimera/v3/src/time/timeKit"
 	"go.uber.org/zap"
@@ -30,9 +29,9 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 		// 随机睡眠
 		randInt := randomKit.Int(1000, 2001)
 		duration := time.Millisecond * time.Duration(randInt)
-		console.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
+		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
 		time.Sleep(duration)
-		console.Info("Sleep ends.", zap.String("duration", duration.String()))
+		logger.Info("Sleep ends.", zap.String("duration", duration.String()))
 
 		now := time.Now()
 		/*
@@ -51,7 +50,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			logger.Error("MkDirs() failed", zap.Error(err))
 			continue
 		}
-		console.Infof("dirPath: [%s]", dirPath)
+		logger.Sugar().Infof("dirPath: [%s]", dirPath)
 
 		// 子logger，后续的输出都用它
 		l := logger.With(zap.String("dirPath", dirPath))
@@ -67,9 +66,9 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			sailFlag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
 				l.Error("isSailing() fails.", zap.Error(err))
+				continue
 			} else {
-				console.Infof("Is sailing? [%t]", sailFlag)
-
+				l.Sugar().Infof("Is sailing? [%t]", sailFlag)
 				if sailFlag {
 					processSailing(adbClient, l, imgPath, days)
 					continue
