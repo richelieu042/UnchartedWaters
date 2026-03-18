@@ -7,6 +7,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/ratelimit v0.3.1
 	go.uber.org/zap v1.27.1
+	gocv.io/x/gocv v0.43.0
 )
 
 require (

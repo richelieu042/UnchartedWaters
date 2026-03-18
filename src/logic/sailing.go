@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"image"
 	"regexp"
 	"strconv"
 	"time"
@@ -70,7 +71,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	if days < 0 {
 		l.Warn("Fail to get left days.", zap.Float64("days", days))
 		return
-	} else if days < 0.3 {
+	} else if days < 0.2 {
 		l.Info("Left days is too few, do nothing.", zap.Float64("days", days))
 		return
 	}
@@ -81,7 +82,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
 	// (1) 模拟点击 3 处高频事件点
-	points := []*adbKit.Point{
+	points := []image.Point{
 		{X: 1168, Y: 708},
 		{X: 1168, Y: 861},
 		{X: 1315, Y: 706},

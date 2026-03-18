@@ -17,14 +17,14 @@ import (
 	3: 匹配成功，匹配度高，点击成功
 */
 func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath string, limiter ratelimit.Limiter) int {
-	matchVal, matchRect, err := gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed)
+	matchVal, matchRect, err := gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
 	if err != nil {
 		l.Sugar().Errorf("Fail to match template, op: %s, error: %+v", op, err)
 		return 0
 	}
 	l.Sugar().Infof("op: %s, matchVal: %.2f", op, matchVal)
 
-	if matchVal < 0.8 {
+	if matchVal < 0.85 {
 		return 1
 	}
 
