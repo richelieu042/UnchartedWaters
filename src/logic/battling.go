@@ -38,8 +38,12 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 		switch flag {
 		case 0, 2:
 			return // 中断
-		case 1, 3:
+		case 1:
+			l.Info("Already auto.")
 			// 继续向下走
+		case 3:
+			// 继续向下走
+			l.Info("Manager to enable auto.")
 		default:
 			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
 		}
