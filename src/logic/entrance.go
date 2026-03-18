@@ -28,7 +28,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 
 	for {
 		// 随机睡眠
-		randInt := randomKit.Int(1000, 2001)
+		randInt := randomKit.Int(1000, 1501)
 		duration := time.Millisecond * time.Duration(randInt)
 		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
 		time.Sleep(duration)
@@ -64,13 +64,13 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			l := log.NewLogger("[SAILING] ")
 			l = l.With(zap.String("dirPath", dirPath))
 
-			sailFlag, days, err := isSailing(l, dirPath, imgPath)
+			flag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
 				l.Error("isSailing() fails.", zap.Error(err))
 				continue
 			} else {
-				l.Sugar().Infof("Is sailing? [%t]", sailFlag)
-				if sailFlag {
+				l.Sugar().Infof("Is sailing? [%t]", flag)
+				if flag {
 					processSailing(adbClient, l, imgPath, days)
 					continue
 				}
@@ -82,8 +82,17 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			l := log.NewLogger("[BATTLING] ")
 			l = l.With(zap.String("dirPath", dirPath))
 
-			//isBattling()
+			flag, err := isBattling(l, imgPath)
+			if err != nil {
+				l.Sugar().Errorf("isBattling() fails, error: %+v", err)
+				continue
+			} else {
+				l.Sugar().Infof("Is battling? [%t]", flag)
+				if flag {
 
+					continue
+				}
+			}
 		}
 	}
 }
