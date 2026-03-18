@@ -17,7 +17,7 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 	if err != nil {
 		return false, errKit.Wrapf(err, "fail to math with template(path: %s)", templPath)
 	}
-	if matchVal < 0.85 {
+	if matchVal < 0.8 {
 		logger.Debug("MatchVal is too low.", zap.Float32("matchVal", matchVal), zap.String("templPath", templPath))
 		return false, nil
 	}

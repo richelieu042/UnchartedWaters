@@ -13,9 +13,13 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	defInterval = 3000
+)
+
 var (
 	// 单位：ms
-	sleepInterval = 1000
+	sleepInterval = defInterval
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger) {
@@ -76,7 +80,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
-					sleepInterval = 1000
+					sleepInterval = defInterval
 
 					processSailing(adbClient, l, imgPath, days)
 					continue

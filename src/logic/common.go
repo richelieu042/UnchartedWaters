@@ -30,7 +30,7 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 	}
 	l.Sugar().Infof("op: %s, matchVal: %.2f", op, matchVal)
 
-	if matchVal < 0.85 {
+	if matchVal < 0.8 {
 		return 1
 	}
 
