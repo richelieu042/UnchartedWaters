@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	defInterval = 1_000
+	defInterval = 1_200
 )
 
 var (
@@ -80,6 +80,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
+					sleepInterval = defInterval
+
 					processSailing(adbClient, l, imgPath, days)
 					continue
 				}
@@ -98,6 +100,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
+					sleepInterval = 3_000
+
 					processBattling(adbClient, l, imgPath)
 					continue
 				}
