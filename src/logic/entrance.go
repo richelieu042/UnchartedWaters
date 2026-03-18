@@ -22,7 +22,7 @@ var (
 	sleepInterval = defInterval
 )
 
-func Start(adbClient adbKit.Client, logger *zap.Logger) {
+func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
 	// 目前仅支持 1920x1080 尺寸
 	w, h, err := adbClient.GetPhysicalSize()
 	if err != nil {
@@ -71,40 +71,48 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 		/* （1）航行中 */
 		{
 			l := log.NewLogger("[SAILING] ")
-			l = l.With(zap.String("dirPath", dirPath))
+			//l = l.With(zap.String("dirPath", dirPath))
 
-			flag, days, err := isSailing(l, dirPath, imgPath)
-			if err != nil {
-				l.Sugar().Errorf("isSailing() fails, error: %+v", err)
-				continue
-			} else {
-				l.Sugar().Infof("Is sailing? [%t]", flag)
-				if flag {
-					sleepInterval = defInterval
-
-					processSailing(adbClient, l, imgPath, days)
+			if !disableSail {
+				flag, days, err := isSailing(l, dirPath, imgPath)
+				if err != nil {
+					l.Sugar().Errorf("isSailing() fails, error: %+v", err)
 					continue
+				} else {
+					l.Sugar().Infof("Is sailing? [%t]", flag)
+					if flag {
+						sleepInterval = defInterval
+
+						processSailing(adbClient, l, imgPath, days)
+						continue
+					}
 				}
+			} else {
+				l.Info("Sail is disabled.")
 			}
 		}
 
 		/* （2）战斗中 */
 		{
 			l := log.NewLogger("[BATTLING] ")
-			l = l.With(zap.String("dirPath", dirPath))
+			//l = l.With(zap.String("dirPath", dirPath))
 
-			flag, err := isBattling(l, imgPath)
-			if err != nil {
-				l.Sugar().Errorf("isBattling() fails, error: %+v", err)
-				continue
-			} else {
-				l.Sugar().Infof("Is battling? [%t]", flag)
-				if flag {
-					sleepInterval = 3_000
-
-					processBattling(adbClient, l, imgPath)
+			if !disableBattle {
+				flag, err := isBattling(l, imgPath)
+				if err != nil {
+					l.Sugar().Errorf("isBattling() fails, error: %+v", err)
 					continue
+				} else {
+					l.Sugar().Infof("Is battling? [%t]", flag)
+					if flag {
+						sleepInterval = 3_000
+
+						processBattling(adbClient, l, imgPath)
+						continue
+					}
 				}
+			} else {
+				l.Info("Battle is disabled.")
 			}
 		}
 	}

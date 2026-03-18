@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	addr    string
-	clean   bool
-	verbose bool
+	addr          string
+	clean         bool
+	verbose       bool
+	disableSail   bool
+	disableBattle bool
 
 	rootCmd = cobraKit.NewSimpleCommand("uw", "《大航海时代：传说》的 adb 脚本。", "", rootRun)
 )
@@ -26,6 +28,8 @@ func init() {
 
 	rootCmd.Flags().BoolVarP(&clean, "clean", "", false, "在adb连接前，清理adb环境")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "", false, "更多的输出")
+	rootCmd.Flags().BoolVarP(&disableSail, "disable_sail", "", false, "航行时，不额外操作？")
+	rootCmd.Flags().BoolVarP(&disableBattle, "disable_battle", "", false, "海战时，不额外操作？")
 }
 
 func rootRun(cmd *cobra.Command, args []string) {
@@ -41,13 +45,15 @@ func rootRun(cmd *cobra.Command, args []string) {
 	logger.Sugar().Infof("addr: [%s]", addr)
 	logger.Sugar().Infof("clean: [%t]", clean)
 	logger.Sugar().Infof("verbose: [%t]", verbose)
+	logger.Sugar().Infof("disableSail: [%t]", disableSail)
+	logger.Sugar().Infof("disableBattle: [%t]", disableBattle)
 
 	client, err := adbKit.NewClient(addr, clean, logger)
 	if err != nil {
 		logger.Sugar().Panicf("Fail to new adb client, error: %+v", err)
 		return
 	}
-	logic.Start(client, logger)
+	logic.Start(client, logger, disableSail, disableBattle)
 }
 
 func Execute() error {
