@@ -12,8 +12,8 @@ func main() {
 		addr := "127.0.0.1:5555"
 		//addr := "127.0.0.1:5585"
 
-		//os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose"}
-		os.Args = []string{"uw", "--addr", addr, "--clean"}
+		os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose"}
+		//os.Args = []string{"uw", "--addr", addr, "--clean"}
 	}
 
 	if err := cmd.Execute(); err != nil {

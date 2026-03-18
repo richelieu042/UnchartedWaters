@@ -13,6 +13,11 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	// 单位：ms
+	sleepInterval = 1000
+)
+
 func Start(adbClient adbKit.Client, logger *zap.Logger) {
 	// 目前仅支持 1920x1080 尺寸
 	w, h, err := adbClient.GetPhysicalSize()
@@ -28,7 +33,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 
 	for {
 		// 随机睡眠
-		randInt := randomKit.Int(1000, 1501)
+		randInt := randomKit.Int(-200, 201) + sleepInterval
 		duration := time.Millisecond * time.Duration(randInt)
 		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
 		time.Sleep(duration)
@@ -71,6 +76,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
+					sleepInterval = 1000
+
 					processSailing(adbClient, l, imgPath, days)
 					continue
 				}
@@ -89,6 +96,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
+					sleepInterval = 3000 // Richelieu: 海战时，间隔调大一点，以防：进出白兵时ui会变，而点击有延时，可能误触
+
 					processBattling(adbClient, l, imgPath)
 					continue
 				}
