@@ -66,7 +66,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 
 			flag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
-				l.Error("isSailing() fails.", zap.Error(err))
+				l.Sugar().Errorf("isSailing() fails, error: %+v", err)
 				continue
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
@@ -89,7 +89,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-
+					// TODO:
 					continue
 				}
 			}
