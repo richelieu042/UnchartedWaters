@@ -6,6 +6,8 @@ import (
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/command/cobraKit"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -27,18 +29,15 @@ func init() {
 }
 
 func rootRun(cmd *cobra.Command, args []string) {
+	var level zapcore.Level
+	if verbose {
+		level = zap.DebugLevel
+	} else {
+		level = zap.InfoLevel
+	}
+	log.SetLevel(level)
+
 	logger := log.NewLogger("")
-
-	//enc := zapKit.NewEncoder()
-	//var level zapcore.Level
-	//if verbose {
-	//	level = zap.DebugLevel
-	//} else {
-	//	level = zap.InfoLevel
-	//}
-	//core := zapKit.NewCore(enc, os.Stdout, level)
-	//logger := zapKit.NewLogger(core)
-
 	logger.Sugar().Infof("addr: [%s]", addr)
 	logger.Sugar().Infof("clean: [%t]", clean)
 	logger.Sugar().Infof("verbose: [%t]", verbose)
