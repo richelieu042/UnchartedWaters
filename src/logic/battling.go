@@ -29,6 +29,8 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
+	// (0) 开启“自动战斗”
+
 	// (1) 召唤海军
 	{
 		op := "navy"
