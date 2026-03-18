@@ -29,7 +29,21 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
-	// (0) 开启“自动战斗”
+	// TODO: (0) 开启“自动战斗”
+	{
+		op := "enable_auto"
+		templPath := "images/sail/not_auto.png.png"
+
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		switch flag {
+		case 0, 2:
+			return // 中断
+		case 1, 3:
+			// 继续向下走
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+		}
+	}
 
 	// (1) 召唤海军
 	{
@@ -39,7 +53,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
 		switch flag {
 		case 0, 2:
-			return
+			return // 中断
 		case 1, 3:
 			// 继续向下走
 		default:
@@ -55,7 +69,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
 		switch flag {
 		case 0, 2:
-			return
+			return // 中断
 		case 1, 3:
 			// 继续向下走
 		default:
