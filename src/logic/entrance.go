@@ -80,8 +80,6 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
-					sleepInterval = defInterval
-
 					processSailing(adbClient, l, imgPath, days)
 					continue
 				}
@@ -100,8 +98,6 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-					sleepInterval = 3000 // Richelieu: 海战时，间隔调大一点，以防：进出白兵时ui会变，而点击有延时，可能误触
-
 					processBattling(adbClient, l, imgPath)
 					continue
 				}
