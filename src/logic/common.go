@@ -1,12 +1,18 @@
 package logic
 
 import (
+	"image"
+
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/gocvKit"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 	"gocv.io/x/gocv"
 )
+
+func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectangle, err error) {
+	return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
+}
 
 /*
 @return
@@ -17,7 +23,7 @@ import (
 	3: 匹配成功，匹配度高，点击成功
 */
 func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath string, limiter ratelimit.Limiter) int {
-	matchVal, matchRect, err := gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
+	matchVal, matchRect, err := match(imgPath, templPath)
 	if err != nil {
 		l.Sugar().Errorf("Fail to match template, op: %s, error: %+v", op, err)
 		return 0

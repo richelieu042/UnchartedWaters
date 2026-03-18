@@ -82,6 +82,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			l := log.NewLogger("[BATTLING] ")
 			l = l.With(zap.String("dirPath", dirPath))
 
+			//isBattling()
+
 		}
 	}
 }

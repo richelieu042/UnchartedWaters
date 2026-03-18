@@ -113,7 +113,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 
 	// (3) 取消（右下角的）折叠
 	{
-		op := "cancel fold"
+		op := "cancel_fold"
 		templPath := "images/sail/folded.png"
 
 		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
