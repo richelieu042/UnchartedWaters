@@ -89,7 +89,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-					// TODO:
+					processBattling(adbClient, l, imgPath)
 					continue
 				}
 			}

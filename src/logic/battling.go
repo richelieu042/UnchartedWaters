@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/core/error/errKit"
 	"go.uber.org/zap"
 )
@@ -18,4 +19,8 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
+
 }
