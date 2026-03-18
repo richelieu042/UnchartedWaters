@@ -3,6 +3,7 @@ package logic
 import (
 	"time"
 
+	"github.com/richelieu-yang/UnchartedWaters/src/log"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
@@ -52,17 +53,17 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 		}
 		logger.Sugar().Infof("dirPath: [%s]", dirPath)
 
-		// 子logger，后续的输出都用它
-		l := logger.With(zap.String("dirPath", dirPath))
-
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
 		if err := adbClient.Screenshot(imgPath); err != nil {
-			l.Error("Screenshot() failed", zap.Error(err))
+			logger.Error("Screenshot() failed", zap.Error(err))
 			continue
 		}
 
 		/* （1）航行中 */
 		{
+			l := log.NewLogger("[SAILING] ")
+			l = l.With(zap.String("dirPath", dirPath))
+
 			sailFlag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
 				l.Error("isSailing() fails.", zap.Error(err))
@@ -78,6 +79,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger) {
 
 		/* （2）战斗中 */
 		{
+			l := log.NewLogger("[BATTLING] ")
+			l = l.With(zap.String("dirPath", dirPath))
 
 		}
 	}
