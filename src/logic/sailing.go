@@ -130,6 +130,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	}
 
 	// (4) 取消（右下角的）折叠
+	// TODO: 有时会误触，可能原因：折叠和取消折叠的按钮太像了
 	{
 		op := "cancel_fold"
 		templPath := "images/sail/folded.png"
