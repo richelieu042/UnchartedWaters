@@ -12,11 +12,20 @@ func main() {
 		addr := "127.0.0.1:5555"
 		//addr := "127.0.0.1:5585"
 
-		//os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose", "--disable_battle"}
-		os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose", "--disable_sail"}
-		//os.Args = []string{"uw", "--addr", addr, "--clean", "--verbose"}
-		//os.Args = []string{"uw", "--addr", addr, "--clean"}
-		//os.Args = []string{"uw", "--help"}
+		os.Args = []string{"uw", "--addr", addr, "--clean"}
+
+		verbose := true
+		disableSail := false
+		disableBattle := true
+		if verbose {
+			os.Args = append(os.Args, "--verbose")
+		}
+		if disableSail {
+			os.Args = append(os.Args, "--disable_sail")
+		}
+		if disableBattle {
+			os.Args = append(os.Args, "--disable_battle")
+		}
 	}
 
 	if err := cmd.Execute(); err != nil {
