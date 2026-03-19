@@ -35,7 +35,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 	}
 	logger.Info("physical size", zap.Int("width", w), zap.Int("height", h))
 	if w != 1920 || h != 1080 {
-		logger.Panic("Size is unsupported!!!", zap.Int("width", w), zap.Int("height", h))
+		logger.Panic("Size isn't supported!!!", zap.Int("width", w), zap.Int("height", h))
 		return
 	}
 
