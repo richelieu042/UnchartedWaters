@@ -5,6 +5,7 @@ import (
 
 	"github.com/richelieu-yang/UnchartedWaters/src/log"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
+	"github.com/richelieu042/chimera/v3/src/atomic/atomicKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/file/fileKit"
@@ -15,6 +16,8 @@ import (
 
 const (
 	defInterval = 1_200
+
+	defBattleCount = 3
 )
 
 var (
@@ -34,6 +37,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		logger.Panic("Size is unsupported!!!", zap.Int("width", w), zap.Int("height", h))
 		return
 	}
+
+	battleCount := atomicKit.NewInt32(3)
 
 	for {
 		// 随机睡眠
@@ -73,22 +78,23 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			l := log.NewLogger("[SAILING] ")
 			//l = l.With(zap.String("dirPath", dirPath))
 
-			if !disableSail {
-				flag, days, err := isSailing(l, dirPath, imgPath)
-				if err != nil {
-					l.Sugar().Errorf("isSailing() fails, error: %+v", err)
-					continue
-				} else {
-					l.Sugar().Infof("Is sailing? [%t]", flag)
-					if flag {
-						sleepInterval = defInterval
+			flag, days, err := isSailing(l, dirPath, imgPath)
+			if err != nil {
+				l.Sugar().Errorf("isSailing() fails, error: %+v", err)
+				continue
+			} else {
+				l.Sugar().Infof("Is sailing? [%t]", flag)
+				if flag {
+					sleepInterval = defInterval
+					battleCount.Store(defBattleCount) // 重置战斗次数，因为已经脱离了战斗
 
+					if disableSail {
+						l.Info("Sail is disabled.")
+					} else {
 						processSailing(adbClient, l, imgPath, days)
 						continue
 					}
 				}
-			} else {
-				l.Info("Sail is disabled.")
 			}
 		}
 
@@ -97,22 +103,22 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			l := log.NewLogger("[BATTLING] ")
 			//l = l.With(zap.String("dirPath", dirPath))
 
-			if !disableBattle {
-				flag, err := isBattling(l, imgPath)
-				if err != nil {
-					l.Sugar().Errorf("isBattling() fails, error: %+v", err)
-					continue
-				} else {
-					l.Sugar().Infof("Is battling? [%t]", flag)
-					if flag {
-						sleepInterval = 3_000
+			flag, err := isBattling(l, imgPath)
+			if err != nil {
+				l.Sugar().Errorf("isBattling() fails, error: %+v", err)
+				continue
+			} else {
+				l.Sugar().Infof("Is battling? [%t]", flag)
+				if flag {
+					sleepInterval = 3_000
 
-						processBattling(adbClient, l, imgPath)
+					if disableBattle {
+						l.Info("Battle is disabled.")
+					} else {
+						processBattling(adbClient, l, imgPath, battleCount)
 						continue
 					}
 				}
-			} else {
-				l.Info("Battle is disabled.")
 			}
 		}
 	}

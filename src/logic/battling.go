@@ -6,6 +6,7 @@ import (
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/core/error/errKit"
+	"go.uber.org/atomic"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 )
@@ -28,7 +29,7 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 /*
 TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点击最右边从上往下数第三个图标（需要设置好策略，目前只能“召唤副舰”，使得无论怎么切换，那个位置一直是“召唤副舰”）
 */
-func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
+func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, count *atomic.Int32) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
@@ -73,14 +74,20 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string) {
 		op := "assistant"
 		templPath := "images/battle/assistant.png"
 
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
-		switch flag {
-		case 0, 2:
-			return // 中断
-		case 1, 3:
-			// 继续向下走
-		default:
-			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+		if count.Load() > 0 {
+			count.Dec()
+
+			flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+			switch flag {
+			case 0, 2:
+				return // 中断
+			case 1, 3:
+				// 继续向下走
+			default:
+				l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+			}
+		} else {
+			l.Info("Count is zero!")
 		}
 	}
 }
