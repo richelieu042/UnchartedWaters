@@ -81,22 +81,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
-	// (1) 模拟点击 3 处高频事件点
-	points := []image.Point{
-		{X: 1168, Y: 708},
-		{X: 1168, Y: 861},
-		{X: 1315, Y: 706},
-	}
-	for i, point := range points {
-		limiter.Take() // 等一会
-		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
-			l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
-			return
-		}
-		l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
-	}
-
-	// (2) 送礼
+	// (1) 【高优先级】送礼
 	{
 		op := "gift"
 		templPath := "images/sail/gift.png"
@@ -111,7 +96,40 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		}
 	}
 
-	// (3) 取消（右下角的）折叠
+	// (2) 模拟点击 3 处高频事件点
+	points := []image.Point{
+		{X: 1168, Y: 708},
+		{X: 1168, Y: 861},
+		{X: 1315, Y: 706},
+	}
+	for i, point := range points {
+		limiter.Take() // 等一会
+		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
+			l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
+			return
+		}
+		l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
+	}
+
+	// (3) 测量
+	{
+		op := "measure"
+		templPath := "images/sail/measure.png"
+
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		switch flag {
+		case 0, 2:
+			return
+		case 1:
+			// 继续向下走
+		case 3:
+			return // 此种情况下，不需要走下一步
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+		}
+	}
+
+	// (4) 取消（右下角的）折叠
 	{
 		op := "cancel_fold"
 		templPath := "images/sail/folded.png"
@@ -124,21 +142,6 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 			// 未折叠，继续向下走
 		case 3:
 			return // 折叠已取消，等下个循环
-		default:
-			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
-		}
-	}
-
-	// (3) 测量
-	{
-		op := "measure"
-		templPath := "images/sail/measure.png"
-
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
-		switch flag {
-		case 0, 2:
-			return
-		case 1, 3: // 继续向下走
 		default:
 			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
 		}

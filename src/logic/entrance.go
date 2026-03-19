@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	defInterval = 1_200
+	defSleepInterval = 800
 
 	// 默认的次数（在战斗中点击按钮的次数）
 	defBattleCount = 3
@@ -23,7 +23,7 @@ const (
 
 var (
 	// 单位：ms
-	sleepInterval = defInterval
+	sleepInterval = defSleepInterval
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
@@ -34,6 +34,9 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		return
 	}
 	logger.Info("physical size", zap.Int("width", w), zap.Int("height", h))
+	if w < h {
+		w, h = h, w
+	}
 	if w != 1920 || h != 1080 {
 		logger.Panic("Size isn't supported!!!", zap.Int("width", w), zap.Int("height", h))
 		return
@@ -86,7 +89,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
-					sleepInterval = defInterval
+					sleepInterval = defSleepInterval
 					battleCount.Store(defBattleCount) // 重置战斗次数，因为已经脱离了战斗
 
 					if disableSail {
