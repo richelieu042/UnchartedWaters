@@ -117,7 +117,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-					sleepInterval = battleSleepInterval
+					sleepInterval = battleSleepInterval // 时间长一点，以避免无效点击
 
 					if disableBattle {
 						l.Info("Battle is disabled.")
