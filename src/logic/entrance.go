@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	defSleepInterval = 800
+	defSleepInterval    = 800
+	battleSleepInterval = 5_000
 
 	// 默认的次数（在战斗中点击按钮的次数）
 	defBattleCount = 3
@@ -42,7 +43,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		return
 	}
 
-	battleCount := atomicKit.NewInt32(3)
+	battleTapCount := atomicKit.NewInt32(3)
 
 	for {
 		// 随机睡眠
@@ -92,7 +93,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
 					sleepInterval = defSleepInterval
-					battleCount.Store(defBattleCount) // 重置战斗次数，因为已经脱离了战斗
+					battleTapCount.Store(defBattleCount) // 重置战斗次数，因为已经脱离了战斗
 
 					if disableSail {
 						l.Info("Sail is disabled.")
@@ -116,12 +117,12 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-					sleepInterval = 3_000
+					sleepInterval = battleSleepInterval
 
 					if disableBattle {
 						l.Info("Battle is disabled.")
 					} else {
-						processBattling(adbClient, l, imgPath, battleCount)
+						processBattling(adbClient, l, imgPath, battleTapCount)
 						continue
 					}
 				}

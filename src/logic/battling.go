@@ -29,7 +29,7 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 /*
 TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点击最右边从上往下数第三个图标（需要设置好策略，目前只能“召唤副舰”，使得无论怎么切换，那个位置一直是“召唤副舰”）
 */
-func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, count *atomic.Int32) {
+func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tapCount *atomic.Int32) {
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
@@ -74,9 +74,9 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, cou
 		op := "assistant"
 		templPath := "images/battle/assistant.png"
 
-		if count.Load() > 0 {
-			count.Dec()
-			l.Info("count - 1", zap.Int32("left_count", count.Load()))
+		if tapCount.Load() > 0 {
+			tapCount.Dec()
+			l.Info("tapCount - 1", zap.Int32("left_count", tapCount.Load()))
 
 			flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
 			switch flag {
