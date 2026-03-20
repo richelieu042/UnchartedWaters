@@ -19,15 +19,13 @@ const (
 	battleSleepInterval = 5_000
 
 	// 默认的次数（在战斗中点击按钮的次数）
-	defBattleCount = 3
-)
-
-var (
-	// 单位：ms
-	sleepInterval = defSleepInterval
+	defBattleTapCount = 3
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
+	battleTapCount := atomicKit.NewInt32(defBattleTapCount)
+	sleepInterval := defSleepInterval // 单位：ms
+
 	// 目前仅支持 1920x1080 尺寸
 	w, h, err := adbClient.GetPhysicalSize()
 	if err != nil {
@@ -42,8 +40,6 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		logger.Panic("Size isn't supported!!!", zap.Int("width", w), zap.Int("height", h))
 		return
 	}
-
-	battleTapCount := atomicKit.NewInt32(3)
 
 	for {
 		// 随机睡眠
@@ -93,7 +89,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
 					sleepInterval = defSleepInterval
-					battleTapCount.Store(defBattleCount) // 重置战斗次数，因为已经脱离了战斗
+					battleTapCount.Store(defBattleTapCount) // 重置战斗次数，因为已经脱离了战斗
 
 					if disableSail {
 						l.Info("Sail is disabled.")
