@@ -26,7 +26,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 	battleTapCount := atomicKit.NewInt32(defBattleTapCount)
 	sleepInterval := defSleepInterval // 单位：ms
 
-	// 目前仅支持 1920x1080 尺寸
+	/* 尺寸，目前仅支持 1920x1080 */
 	w, h, err := adbClient.GetPhysicalSize()
 	if err != nil {
 		logger.Sugar().Panicf("Fail to get physical size, error: %+v", err)
