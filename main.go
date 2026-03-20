@@ -18,8 +18,8 @@ func main() {
 		os.Args = []string{"uw", "--addr", addr, "--clean"}
 
 		verbose := true
-		disableSail := false
-		disableBattle := true
+		disableSail := true
+		disableBattle := false
 		if verbose {
 			os.Args = append(os.Args, "--verbose")
 		}

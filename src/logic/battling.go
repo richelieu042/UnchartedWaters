@@ -76,6 +76,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, cou
 
 		if count.Load() > 0 {
 			count.Dec()
+			l.Info("count - 1", zap.Int32("left_count", count.Load()))
 
 			flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
 			switch flag {
