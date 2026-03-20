@@ -23,8 +23,8 @@ const (
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
-	battleTapCount := atomicKit.NewInt32(defBattleTapCount)
-	sleepInterval := defSleepInterval // 单位：ms
+	sleepInterval := defSleepInterval                       // 单位：ms
+	battleTapCount := atomicKit.NewInt32(defBattleTapCount) // 第1次点击大概率无效，因为刚开战按钮在CD
 
 	/* 尺寸，目前仅支持 1920x1080 */
 	w, h, err := adbClient.GetPhysicalSize()
@@ -79,7 +79,6 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		/* （1）航行中 */
 		{
 			l := log.NewLogger("[SAILING] ")
-			//l = l.With(zap.String("dirPath", dirPath))
 
 			flag, days, err := isSailing(l, dirPath, imgPath)
 			if err != nil {
@@ -104,7 +103,6 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		/* （2）战斗中 */
 		{
 			l := log.NewLogger("[BATTLING] ")
-			//l = l.With(zap.String("dirPath", dirPath))
 
 			flag, err := isBattling(l, imgPath)
 			if err != nil {
