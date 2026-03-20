@@ -72,10 +72,12 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		logger.Sugar().Infof("dirPath: [%s]", dirPath)
 
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
+		start := time.Now()
 		if err := adbClient.Screenshot(imgPath); err != nil {
 			logger.Error("Screenshot() failed", zap.Error(err))
 			continue
 		}
+		logger.Debug("Screenshot succeeds.", zap.String("duration", time.Since(start).String()))
 
 		/* （1）航行中 */
 		{
