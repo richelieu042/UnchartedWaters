@@ -19,7 +19,7 @@ const (
 	battleSleepInterval = 5_000
 
 	// 默认的次数（在战斗中点击按钮的次数）
-	defBattleTapCount = 3
+	defBattleTapCount = 4
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
