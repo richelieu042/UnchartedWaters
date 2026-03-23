@@ -25,6 +25,7 @@ const (
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
 	sleepInterval := defSleepInterval                       // 单位：ms
 	battleTapCount := atomicKit.NewInt32(defBattleTapCount) // 第1次点击大概率无效，因为刚开战按钮在CD
+	preSailing := false                                     // 上一次是否是在航行？
 
 	/* 尺寸，目前仅支持 1920x1080 */
 	w, h, err := adbClient.GetPhysicalSize()
@@ -89,6 +90,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 				if flag {
 					sleepInterval = defSleepInterval
 					battleTapCount.Store(defBattleTapCount) // 重置战斗次数，因为已经脱离了战斗
+					preSailing = true
 
 					if disableSail {
 						l.Info("Sail is disabled.")
@@ -112,6 +114,13 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
 					sleepInterval = battleSleepInterval // 时间长一点，以避免无效点击
+					if preSailing {
+						preSailing = false
+						d := time.Second * 8
+						time.Sleep(d) // 刚进入战斗，前8s内不允许召唤海军or友舰
+						l.Warn("初次进入战斗，将sleep一段时间.", zap.String("duration", d.String()))
+						continue
+					}
 
 					if disableBattle {
 						l.Info("Battle is disabled.")

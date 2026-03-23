@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"image"
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
@@ -33,7 +34,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 	// 限流器：避免短时间内操作太多次
 	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
 
-	// (0) 开启“自动战斗”
+	// (1) 开启“自动战斗”
 	{
 		op := "enable_auto"
 		templPath := "images/battle/not_auto.png"
@@ -53,42 +54,21 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 		}
 	}
 
-	//// (1) 召唤海军
-	//{
-	//	op := "navy"
-	//	templPath := "images/battle/navy.png"
-	//
-	//	flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
-	//	switch flag {
-	//	case 0, 2:
-	//		return // 中断
-	//	case 1, 3:
-	//		// 继续向下走
-	//	default:
-	//		l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
-	//	}
-	//}
+	/* (2) 召唤海军 && 友舰 */
+	if tapCount.Load() > 0 {
+		tapCount.Dec()
+		l.Info("tapCount - 1", zap.Int32("left_count", tapCount.Load()))
 
-	// (2) 召唤副舰
-	{
-		op := "assistant"
-		templPath := "images/battle/assistant.png"
-
-		if tapCount.Load() > 0 {
-			tapCount.Dec()
-			l.Info("tapCount - 1", zap.Int32("left_count", tapCount.Load()))
-
-			flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
-			switch flag {
-			case 0, 2:
-				return // 中断
-			case 1, 3:
-				// 继续向下走
-			default:
-				l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
-			}
-		} else {
-			l.Info("Count is zero!")
+		points := []image.Point{
+			{1818, 333},
+			{1708, 333},
 		}
+		for i, p := range points {
+			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
+				l.Error("Fail to tap.", zap.Int("i", i))
+			}
+		}
+	} else {
+		l.Info("Count is zero!")
 	}
 }
