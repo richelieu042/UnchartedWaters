@@ -102,9 +102,9 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		{X: 1168, Y: 861},
 		{X: 1315, Y: 706},
 	}
-	for i, point := range points {
+	for i, p := range points {
 		limiter.Take() // 等一会
-		if err := adbClient.TapAsHumanBeings(point.X, point.Y, 10); err != nil {
+		if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
 			l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
 			return
 		}
