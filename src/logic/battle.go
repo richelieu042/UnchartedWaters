@@ -64,9 +64,12 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 			{1708, 333},
 		}
 		for i, p := range points {
+			limiter.Take() // 等一会
 			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
 				l.Error("Fail to tap.", zap.Int("i", i))
+				continue
 			}
+			l.Info("Manager to tap.", zap.Int("i", i))
 		}
 	} else {
 		l.Info("Count is zero!")

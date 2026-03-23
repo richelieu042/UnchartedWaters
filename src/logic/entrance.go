@@ -19,7 +19,7 @@ const (
 	battleSleepInterval = 5_000
 
 	// 默认的次数（在战斗中点击按钮的次数）
-	defBattleTapCount = 4
+	defBattleTapCount = 5
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
@@ -117,8 +117,9 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 					if preSailing {
 						preSailing = false
 						d := time.Second * 8
+						l.Warn("初次进入战斗，sleep starts...", zap.String("duration", d.String()))
 						time.Sleep(d) // 刚进入战斗，前8s内不允许召唤海军or友舰
-						l.Warn("初次进入战斗，将sleep一段时间.", zap.String("duration", d.String()))
+						l.Warn("初次进入战斗，sleep ends.")
 						continue
 					}
 
