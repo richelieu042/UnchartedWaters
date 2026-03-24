@@ -14,6 +14,7 @@ import (
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/image/imageKit"
 	"github.com/richelieu042/chimera/v3/src/ocr/gosseractKit"
+	"github.com/richelieu042/chimera/v3/src/randomKit"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 )
@@ -109,6 +110,10 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
+
+			// 随机等一会，使顺序更加随机
+			ri := randomKit.Int(10, 30)
+			time.Sleep(time.Second * time.Duration(ri))
 
 			limiter.Take() // 等一会
 			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
