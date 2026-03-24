@@ -5,6 +5,7 @@ import (
 	"image"
 	"regexp"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
@@ -102,14 +103,22 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		{X: 1168, Y: 861},
 		{X: 1315, Y: 706},
 	}
+
+	var wg sync.WaitGroup
 	for i, p := range points {
-		limiter.Take() // 等一会
-		if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
-			l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
-			return
-		}
-		l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			limiter.Take() // 等一会
+			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
+				l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
+				return
+			}
+			l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
+		}()
 	}
+	wg.Wait()
 
 	// (3) 测量
 	{
