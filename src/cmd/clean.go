@@ -4,6 +4,7 @@ import (
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/command/cobraKit"
 	"github.com/richelieu042/chimera/v3/src/log/console"
+	"github.com/richelieu042/chimera/v3/src/log/zapKit"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,8 @@ func cleanRun(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if err := adbKit.Clean(); err != nil {
+	logger := zapKit.NewSimpleConsoleLogger()
+	if err := adbKit.Clean(logger); err != nil {
 		console.Errorf("Clean failed, error %s", err)
 		return
 	}

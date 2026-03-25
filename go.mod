@@ -3,7 +3,7 @@ module github.com/richelieu-yang/UnchartedWaters
 go 1.26.1
 
 require (
-	github.com/richelieu042/chimera/v3 v3.26.130
+	github.com/richelieu042/chimera/v3 v3.26.135
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/atomic v1.11.0
 	go.uber.org/ratelimit v0.3.1
@@ -81,7 +81,7 @@ require (
 	golang.org/x/arch v0.25.0 // indirect
 	golang.org/x/crypto v0.49.0 // indirect
 	golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90 // indirect
-	golang.org/x/image v0.37.0 // indirect
+	golang.org/x/image v0.38.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
