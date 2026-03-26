@@ -32,7 +32,7 @@ TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点
 */
 func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tapCount *atomic.Int32) {
 	// 限流器：避免短时间内操作太多次
-	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
+	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(600*time.Millisecond), ratelimit.WithoutSlack)
 
 	// (1) 开启“自动战斗”
 	{

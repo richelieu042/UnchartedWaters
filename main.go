@@ -11,15 +11,15 @@ import (
 func main() {
 	/* test */
 	{
-		addr := "192.168.60.205:16384"
-		//addr := "127.0.0.1:5555"
+		//addr := "192.168.60.205:16384"
+		addr := "127.0.0.1:5555"
 		//addr := "127.0.0.1:5585"
 
 		os.Args = []string{"uw", "--addr", addr, "--clean"}
 
 		verbose := false
-		disableSail := false
-		disableBattle := true
+		disableSail := true
+		disableBattle := false
 
 		if verbose {
 			os.Args = append(os.Args, "--verbose")
@@ -33,6 +33,8 @@ func main() {
 
 		console.Warnf("command: %s", sliceKit.Join(os.Args, " "))
 	}
+
+	//os.Args = []string{"uw", "clean"}
 
 	if err := cmd.Execute(); err != nil {
 		panic(err)
