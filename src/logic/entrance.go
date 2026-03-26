@@ -9,7 +9,6 @@ import (
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/file/fileKit"
-	"github.com/richelieu042/chimera/v3/src/randomKit"
 	"github.com/richelieu042/chimera/v3/src/time/timeKit"
 	"go.uber.org/zap"
 )
@@ -43,19 +42,17 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 	}
 
 	for {
-		// 随机睡眠
-		randInt := randomKit.Int(-200, 201) + sleepInterval
-		duration := time.Millisecond * time.Duration(randInt)
+		duration := time.Millisecond * time.Duration(sleepInterval)
 		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
 		time.Sleep(duration)
 		logger.Info("Sleep ends.", zap.String("duration", duration.String()))
 
 		now := time.Now()
-		/*
-			第1层：__tmp
-			第2层：adb连接地址（处理了":"）
-			第3层：时间精确到“分钟”
-			第4层：时间精确到“毫秒”
+		/*-
+		第1层：__tmp
+		第2层：adb连接地址（处理了":"）
+		第3层：时间精确到“分钟”
+		第4层：时间精确到“毫秒”
 		*/
 		dirPath := pathKit.Join("__tmp",
 			strKit.ReplaceAll(adbClient.GetAddress(), ":", "_"),
