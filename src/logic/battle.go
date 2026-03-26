@@ -73,7 +73,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 				defer wg.Done()
 
 				// 随机等一会，使顺序更加随机
-				ri := randomKit.Int(10, 20)
+				ri := randomKit.Int(1, 11)
 				time.Sleep(time.Millisecond * time.Duration(ri))
 
 				limiter.Take() // 等一会
