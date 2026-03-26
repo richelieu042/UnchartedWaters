@@ -66,6 +66,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		}
 		logger.Sugar().Infof("dirPath: [%s]", dirPath)
 
+		/* 截图（耗时不定: 远程adb的话耗时会较长） */
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
 		start := time.Now()
 		if err := adbClient.Screenshot(imgPath); err != nil {
