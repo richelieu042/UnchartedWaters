@@ -29,11 +29,12 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 		l.Sugar().Errorf("Fail to match template, op: %s, error: %+v", op, err)
 		return 0
 	}
-	l.Sugar().Infof("op: %s, matchVal: %.2f", op, matchVal)
 
 	if matchVal < 0.8 {
+		l.Debug("MatchVal is too low.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 		return 1
 	}
+	l.Debug("MatchVal is enough.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 
 	limiter.Take() // 等一会
 	if err := adbClient.TapAsHumanBeings(matchRect.Min.X+matchRect.Dx()/2, matchRect.Min.Y+matchRect.Dy()/2, 10); err != nil {
