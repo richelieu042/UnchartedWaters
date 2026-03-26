@@ -94,8 +94,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 						l.Info("Sail is disabled.")
 					} else {
 						processSailing(adbClient, l, imgPath, days)
-						continue
 					}
+					continue
 				}
 			}
 		}
@@ -125,8 +125,8 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 						l.Info("Battle is disabled.")
 					} else {
 						processBattling(adbClient, l, imgPath, battleTapCount)
-						continue
 					}
+					continue
 				}
 			}
 		}
