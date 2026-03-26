@@ -2,11 +2,13 @@ package logic
 
 import (
 	"image"
+	"sync"
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/core/error/errKit"
+	"github.com/richelieu042/chimera/v3/src/randomKit"
 	"go.uber.org/atomic"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
@@ -63,15 +65,27 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 			{1818, 333},
 			{1708, 333},
 		}
+		var wg sync.WaitGroup
 		for i, p := range points {
-			limiter.Take() // 等一会
-			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
-				l.Error("Fail to tap.", zap.Int("i", i))
-				continue
-			}
-			l.Info("Manager to tap.", zap.Int("i", i))
+			wg.Add(1)
+
+			go func() {
+				defer wg.Done()
+
+				// 随机等一会，使顺序更加随机
+				ri := randomKit.Int(10, 30)
+				time.Sleep(time.Millisecond * time.Duration(ri))
+
+				limiter.Take() // 等一会
+				if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
+					l.Error("Fail to tap.", zap.Int("i", i))
+					return
+				}
+				l.Info("Manager to tap.", zap.Int("i", i))
+			}()
 		}
+		wg.Wait()
 	} else {
-		l.Info("Count is zero!")
+		l.Warn("Count is zero!")
 	}
 }
