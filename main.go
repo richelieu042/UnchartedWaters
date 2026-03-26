@@ -17,7 +17,7 @@ func main() {
 
 		os.Args = []string{"uw", "--addr", addr, "--clean"}
 
-		verbose := false
+		verbose := true
 		disableSail := true
 		disableBattle := false
 

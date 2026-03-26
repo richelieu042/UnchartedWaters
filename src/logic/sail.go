@@ -112,7 +112,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 			defer wg.Done()
 
 			// 随机等一会，使顺序更加随机
-			ri := randomKit.Int(10, 30)
+			ri := randomKit.Int(10, 20)
 			time.Sleep(time.Millisecond * time.Duration(ri))
 
 			limiter.Take() // 等一会
