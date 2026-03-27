@@ -38,8 +38,6 @@ func isSailing(logger *zap.Logger, dirPath, imgPath string) (bool, float64, erro
 	logger.Sugar().Debugf("text: [%s]", text)
 
 	sailing := strKit.Index(text, "航行中") != -1
-	logger.Sugar().Debugf("Is sailing: [%t]", sailing)
-
 	if sailing {
 		days, err = getDays(text)
 		if err != nil {
