@@ -2,12 +2,19 @@ package logic
 
 import (
 	"image"
+	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
+	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/gocvKit"
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 	"gocv.io/x/gocv"
+)
+
+var (
+	// opLimiter 限流器：避免短时间内操作太多次
+	opLimiter = rateLimitKit.NewUberLimiter(1, ratelimit.Per(600*time.Millisecond), ratelimit.WithoutSlack)
 )
 
 func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectangle, err error) {
@@ -23,7 +30,7 @@ func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectang
 	2: 匹配成功，匹配度高，点击失败
 	3: 匹配成功，匹配度高，点击成功
 */
-func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath string, limiter ratelimit.Limiter) int {
+func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath string) int {
 	matchVal, matchRect, err := match(imgPath, templPath)
 	if err != nil {
 		l.Sugar().Errorf("Fail to match template, op: %s, error: %+v", op, err)
@@ -36,11 +43,15 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 	}
 	l.Debug("MatchVal is enough.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 
-	limiter.Take() // 等一会
-	if err := adbClient.TapAsHumanBeings(matchRect.Min.X+matchRect.Dx()/2, matchRect.Min.Y+matchRect.Dy()/2, 10); err != nil {
+	if err := _tap(adbClient, matchRect.Min.X+matchRect.Dx()/2, matchRect.Min.Y+matchRect.Dy()/2, 10); err != nil {
 		l.Error("Fail to tap.", zap.String("op", op))
 		return 2
 	}
 	l.Info("Manager to tap.", zap.String("op", op))
 	return 3
+}
+
+func _tap(adbClient adbKit.Client, x, y int, axisOffset int) error {
+	opLimiter.Take() // 先等一会
+	return adbClient.TapAsHumanBeings(x, y, axisOffset)
 }

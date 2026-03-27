@@ -9,13 +9,11 @@ import (
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
-	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
 	"github.com/richelieu042/chimera/v3/src/image/imageKit"
 	"github.com/richelieu042/chimera/v3/src/ocr/gosseractKit"
 	"github.com/richelieu042/chimera/v3/src/randomKit"
-	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 )
 
@@ -80,15 +78,12 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 
 	l.Info("Left days is enough.", zap.Float64("days", days))
 
-	// 限流器：避免短时间内操作太多次
-	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(500*time.Millisecond), ratelimit.WithoutSlack)
-
 	// (1) 【高优先级】送礼
 	{
 		op := "gift"
 		templPath := "images/sail/gift.png"
 
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
 		switch flag {
 		case 0, 2:
 			return
@@ -115,11 +110,11 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 			ri := randomKit.Int(10, 21)
 			time.Sleep(time.Millisecond * time.Duration(ri))
 
-			limiter.Take() // 等一会
-			if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
+			if err := _tap(adbClient, p.X, p.Y, 10); err != nil {
 				l.Error("Fail to tap.", zap.String("op", "event"), zap.Int("index", i))
 				return
 			}
+
 			l.Info("Manager to tap.", zap.String("op", "event"), zap.Int("index", i))
 		}()
 	}
@@ -130,7 +125,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		op := "measure"
 		templPath := "images/sail/measure.png"
 
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
 		switch flag {
 		case 0, 2:
 			return
@@ -149,7 +144,7 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		op := "cancel_fold"
 		templPath := "images/sail/folded.png"
 
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
 		switch flag {
 		case 0, 2:
 			return

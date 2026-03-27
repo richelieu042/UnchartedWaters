@@ -6,11 +6,9 @@ import (
 	"time"
 
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
-	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/core/error/errKit"
 	"github.com/richelieu042/chimera/v3/src/randomKit"
 	"go.uber.org/atomic"
-	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 )
 
@@ -33,15 +31,12 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点击最右边从上往下数第三个图标（需要设置好策略，目前只能“召唤副舰”，使得无论怎么切换，那个位置一直是“召唤副舰”）
 */
 func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tapCount *atomic.Int32) {
-	// 限流器：避免短时间内操作太多次
-	limiter := rateLimitKit.NewUberLimiter(1, ratelimit.Per(600*time.Millisecond), ratelimit.WithoutSlack)
-
 	// (1) 开启“自动战斗”
 	{
 		op := "enable_auto"
 		templPath := "images/battle/not_auto.png"
 
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath, limiter)
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
 		switch flag {
 		case 0, 2:
 			return // 中断
@@ -76,8 +71,7 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 				ri := randomKit.Int(10, 21)
 				time.Sleep(time.Millisecond * time.Duration(ri))
 
-				limiter.Take() // 等一会
-				if err := adbClient.TapAsHumanBeings(p.X, p.Y, 10); err != nil {
+				if err := _tap(adbClient, p.X, p.Y, 10); err != nil {
 					l.Error("Fail to tap.", zap.Int("i", i))
 					return
 				}
