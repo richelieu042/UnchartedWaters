@@ -27,9 +27,6 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 	return true, nil
 }
 
-/*
-TODO: 白兵会切换右上角的UI，可能导致误触，临时方案：只点击最右边从上往下数第三个图标（需要设置好策略，目前只能“召唤副舰”，使得无论怎么切换，那个位置一直是“召唤副舰”）
-*/
 func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tapCount *atomic.Int32) {
 	// (1) 开启“自动战斗”
 	{
@@ -51,14 +48,14 @@ func processBattling(adbClient adbKit.Client, l *zap.Logger, imgPath string, tap
 		}
 	}
 
-	/* (2) 召唤海军 && 友舰 */
+	/* (2) 召唤友舰（海军可以在设置中自动召唤） */
 	if tapCount.Load() > 0 {
 		tapCount.Dec()
 		l.Info("tapCount - 1", zap.Int32("left_count", tapCount.Load()))
 
 		points := []image.Point{
 			{1818, 333},
-			{1708, 333},
+			//{1708, 333},
 		}
 		var wg sync.WaitGroup
 		for i, p := range points {
