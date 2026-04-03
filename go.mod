@@ -3,7 +3,7 @@ module github.com/richelieu-yang/UnchartedWaters
 go 1.26.1
 
 require (
-	github.com/richelieu042/chimera/v3 v3.26.135
+	github.com/richelieu042/chimera/v3 v3.26.137
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/atomic v1.11.0
 	go.uber.org/ratelimit v0.3.1
@@ -35,7 +35,7 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.30.1 // indirect
+	github.com/go-playground/validator/v10 v10.30.2 // indirect
 	github.com/gogf/gf/v2 v2.10.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -62,7 +62,7 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/samber/lo v1.53.0 // indirect
-	github.com/shirou/gopsutil/v4 v4.26.2 // indirect
+	github.com/shirou/gopsutil/v4 v4.26.3 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/sony/sonyflake v1.3.0 // indirect
