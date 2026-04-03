@@ -8,6 +8,7 @@ import (
 	"github.com/richelieu042/chimera/v3/src/atomic/atomicKit"
 	"github.com/richelieu042/chimera/v3/src/core/pathKit"
 	"github.com/richelieu042/chimera/v3/src/core/strKit"
+	"github.com/richelieu042/chimera/v3/src/cronKit"
 	"github.com/richelieu042/chimera/v3/src/file/fileKit"
 	"github.com/richelieu042/chimera/v3/src/time/timeKit"
 	"go.uber.org/zap"
@@ -41,6 +42,24 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		return
 	}
 
+	parentDir := pathKit.Join("__tmp", strKit.ReplaceAll(adbClient.GetAddress(), ":", "_"))
+	logger.Sugar().Infof("parentDir: [%s]", parentDir)
+
+	/* 启动就跑一次 */
+	job := &cleanJob{
+		parentDir: parentDir,
+		logger:    logger,
+	}
+	job.Run()
+
+	/* 定时删除过期文件 */
+	spec := "0 0/10 * * * ?" // 从每小时第 0 分开始，每隔 10 分钟执行一次
+	c, _, err := cronKit.NewCronWithJob(spec, job)
+	if err != nil {
+		logger.Sugar().Panicf("NewCronWithTask() failed, error: %+v", err)
+	}
+	c.Start() // 不堵塞
+
 	for {
 		duration := time.Millisecond * time.Duration(sleepInterval)
 		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
@@ -54,8 +73,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		第3层：时间精确到“分钟”
 		第4层：时间精确到“毫秒”
 		*/
-		dirPath := pathKit.Join("__tmp",
-			strKit.ReplaceAll(adbClient.GetAddress(), ":", "_"),
+		dirPath := pathKit.Join(parentDir,
 			timeKit.Format(now, "2006-01-02"),
 			timeKit.Format(now, "15.04"),
 			timeKit.Format(now, "05.000"),
