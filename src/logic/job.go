@@ -8,12 +8,10 @@ import (
 	"go.uber.org/zap"
 )
 
-type (
-	cleanJob struct {
-		parentDir string
-		logger    *zap.Logger
-	}
-)
+type cleanJob struct {
+	parentDir string
+	logger    *zap.Logger
+}
 
 func (job *cleanJob) Run() {
 	l := job.logger
@@ -25,7 +23,9 @@ func (job *cleanJob) Run() {
 			l.Error("Fallback to ModTime.", zap.String("path", path))
 		}
 
-		return time.Since(birthTime) > 10*time.Minute
+		deleteFlag := time.Since(birthTime) > 10*time.Minute
+		//l.Warn("---", zap.String("path", path), zap.Bool("deleteFlag", deleteFlag), zap.String("birthTime", birthTime.String()))
+		return deleteFlag
 	})
 	if err != nil {
 		l.Sugar().Errorf("Clean() failed, error: %+v", err)
