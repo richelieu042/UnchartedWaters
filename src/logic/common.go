@@ -18,8 +18,8 @@ var (
 )
 
 func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectangle, err error) {
-	//return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
-	return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed)
+	return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
+	//return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed)
 }
 
 /*
@@ -37,7 +37,7 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 		return 0
 	}
 
-	if matchVal < 0.8 {
+	if matchVal < 0.85 {
 		l.Debug("MatchVal is too low.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 		return 1
 	}
