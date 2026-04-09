@@ -37,14 +37,23 @@ func isSailing(logger *zap.Logger, dirPath, imgPath string) (bool, float64, erro
 	}
 	logger.Sugar().Debugf("text: [%s]", text)
 
-	sailing := strKit.Index(text, "航行中") != -1
-	if sailing {
-		days, err = getDays(text)
-		if err != nil {
-			logger.Error("获取剩余航行天数失败！", zap.Error(err))
-		} else {
-			logger.Sugar().Debugf("天数: [%.2f]", days)
-		}
+	//sailing := strKit.Index(text, "航行中") != -1
+	//if sailing {
+	//	days, err = getDays(text)
+	//	if err != nil {
+	//		logger.Error("获取剩余航行天数失败！", zap.Error(err))
+	//	} else {
+	//		logger.Sugar().Debugf("天数: [%.2f]", days)
+	//	}
+	//}
+
+	sailing := false
+	days, err = getDays(text)
+	if err != nil {
+		logger.Error("获取剩余航行天数失败！", zap.Error(err))
+	} else {
+		logger.Sugar().Debugf("天数: [%.2f]", days)
+		sailing = days > 0
 	}
 
 	return sailing, days, nil
@@ -52,9 +61,12 @@ func isSailing(logger *zap.Logger, dirPath, imgPath string) (bool, float64, erro
 
 // getDays 提取字符串中"天"前面的数字（严格匹配）
 func getDays(s string) (float64, error) {
+	if err := strKit.AssertNotBlank(s, "s"); err != nil {
+		return -1, err
+	}
+
 	re := regexp.MustCompile(`(\d+\.?\d*)天`)
 	match := re.FindStringSubmatch(s)
-
 	if len(match) > 1 {
 		return strconv.ParseFloat(match[1], 64)
 	}
