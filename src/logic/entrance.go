@@ -3,6 +3,7 @@ package logic
 import (
 	"time"
 
+	"github.com/richelieu-yang/UnchartedWaters/src/conf"
 	"github.com/richelieu-yang/UnchartedWaters/src/log"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/atomic/atomicKit"
@@ -15,15 +16,11 @@ import (
 )
 
 const (
-	defSleepInterval    = 800
-	battleSleepInterval = 5_000
-
 	// 默认的次数（在战斗中点击按钮的次数）
 	defBattleTapCount = 6
 )
 
 func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBattle bool) {
-	sleepInterval := defSleepInterval                       // 单位：ms
 	battleTapCount := atomicKit.NewInt32(defBattleTapCount) // 第1次点击大概率无效，因为刚开战按钮在CD
 	preSailing := false                                     // 上一次是否是在航行？
 
@@ -60,11 +57,11 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 	}
 	c.Start() // 不堵塞
 
+	sleepInterval := conf.GetDefSleepInterval()
 	for {
-		duration := time.Millisecond * time.Duration(sleepInterval)
-		logger.Info("Sleep starts...................................................", zap.String("duration", duration.String()))
-		time.Sleep(duration)
-		logger.Info("Sleep ends.", zap.String("duration", duration.String()))
+		logger.Info("Sleep starts...................................................", zap.String("duration", sleepInterval.String()))
+		time.Sleep(sleepInterval)
+		logger.Info("Sleep ends.")
 
 		now := time.Now()
 		/*-
@@ -104,7 +101,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			} else {
 				l.Sugar().Infof("Is sailing? [%t]", flag)
 				if flag {
-					sleepInterval = defSleepInterval
+					sleepInterval = conf.GetDefSleepInterval()
 					battleTapCount.Store(defBattleTapCount) // 重置战斗次数，因为已经脱离了战斗
 					preSailing = true
 
@@ -129,7 +126,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 			} else {
 				l.Sugar().Infof("Is battling? [%t]", flag)
 				if flag {
-					sleepInterval = battleSleepInterval // 时间长一点，以避免无效点击
+					sleepInterval = conf.GetBattleSleepInterval() // 时间长一点，以避免无效点击
 					if preSailing {
 						preSailing = false
 						d := time.Second * 8

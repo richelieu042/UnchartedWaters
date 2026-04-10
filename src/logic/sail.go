@@ -50,7 +50,7 @@ func isSailing(logger *zap.Logger, dirPath, imgPath string) (bool, float64, erro
 	sailing := false
 	days, err = getDays(text)
 	if err != nil {
-		logger.Error("获取剩余航行天数失败！", zap.Error(err))
+		logger.Warn("获取剩余航行天数失败！", zap.Error(err))
 	} else {
 		logger.Sugar().Debugf("天数: [%.2f]", days)
 		sailing = days > 0
