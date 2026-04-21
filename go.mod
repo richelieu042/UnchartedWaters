@@ -3,7 +3,7 @@ module github.com/richelieu-yang/UnchartedWaters
 go 1.26.2
 
 require (
-	github.com/richelieu042/chimera/v3 v3.26.148
+	github.com/richelieu042/chimera/v3 v3.26.152
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/atomic v1.11.0
 	go.uber.org/ratelimit v0.3.1
@@ -78,11 +78,11 @@ require (
 	go.opentelemetry.io/otel/sdk v1.43.0 // indirect
 	go.opentelemetry.io/otel/trace v1.43.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/arch v0.25.0 // indirect
-	golang.org/x/crypto v0.49.0 // indirect
-	golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90 // indirect
-	golang.org/x/image v0.38.0 // indirect
+	golang.org/x/arch v0.26.0 // indirect
+	golang.org/x/crypto v0.50.0 // indirect
+	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
+	golang.org/x/image v0.39.0 // indirect
 	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 )
