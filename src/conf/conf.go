@@ -3,7 +3,7 @@ package conf
 import "time"
 
 var (
-	defSleepInterval = 1_200 * time.Millisecond
+	defSleepInterval = 1_300 * time.Millisecond
 
 	battleSleepInterval = 5_000 * time.Millisecond
 )
