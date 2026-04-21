@@ -34,7 +34,7 @@ func main() {
 		disableSail = false
 		disableBattle = true
 
-		conf.SetDefSleepInterval(time.Millisecond * 20)
+		conf.SetDefSleepInterval(time.Millisecond * 10)
 	}
 
 	/* 海战 */

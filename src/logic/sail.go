@@ -88,8 +88,13 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 
 	l.Info("Left days is enough.", zap.Float64("days", days))
 
+	var wg sync.WaitGroup
+
 	// (1) 【高优先级】送礼
-	{
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
 		op := "gift"
 		templPath := "images/sail/gift.png"
 
@@ -101,7 +106,26 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		default:
 			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
 		}
-	}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		op := "gift1"
+		templPath := "images/sail/gift1.png"
+
+		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
+		switch flag {
+		case 0, 2:
+			return
+		case 1, 3: // 继续向下走
+		default:
+			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
+		}
+	}()
+
+	wg.Wait()
 
 	// (2) 模拟点击 3 处高频事件点
 	points := []image.Point{
@@ -110,7 +134,6 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 		{X: 1315, Y: 706},
 	}
 
-	var wg sync.WaitGroup
 	for i, p := range points {
 		wg.Add(1)
 		go func() {
