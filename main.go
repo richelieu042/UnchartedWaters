@@ -16,17 +16,28 @@ var (
 )
 
 func main() {
-	/* 远程 - 跑商 */
+	/* 本地 - 跑商 */
+	//{
+	//	addr = "127.0.0.1:5555"
+	//	//addr = "127.0.0.1:5585"
+	//	verbose = true
+	//	disableSail = false
+	//	disableBattle = true
+	//
+	//	conf.SetDefSleepInterval(time.Millisecond * 1500)
+	//}
+
+	///* 远程 - 跑商 */
 	{
 		addr = "192.168.60.205:16384"
 		verbose = true
 		disableSail = false
 		disableBattle = true
 
-		conf.SetDefSleepInterval(time.Millisecond * 10)
+		conf.SetDefSleepInterval(time.Millisecond * 20)
 	}
 
-	///* 海战 */
+	/* 海战 */
 	//{
 	//	//addr = "192.168.60.205:16384"
 	//	addr = "127.0.0.1:5555"
