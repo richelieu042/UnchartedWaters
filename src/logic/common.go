@@ -43,11 +43,13 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 	}
 	l.Debug("MatchVal is enough.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 
-	if err := _tap(adbClient, matchRect.Min.X+matchRect.Dx()/2, matchRect.Min.Y+matchRect.Dy()/2, 10); err != nil {
-		l.Error("Fail to tap.", zap.String("op", op))
+	x := matchRect.Min.X + matchRect.Dx()/2
+	y := matchRect.Min.Y + matchRect.Dy()/2
+	if err := _tap(adbClient, x, y, 6); err != nil {
+		l.Error("Fail to tap.", zap.String("op", op), zap.Int("x", x), zap.Int("y", y), zap.Error(err))
 		return 2
 	}
-	l.Info("Manager to tap.", zap.String("op", op))
+	l.Info("Manager to tap.", zap.String("op", op), zap.Int("x", x), zap.Int("y", y))
 	return 3
 }
 

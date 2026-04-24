@@ -2,8 +2,10 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/richelieu-yang/UnchartedWaters/src/cmd"
+	"github.com/richelieu-yang/UnchartedWaters/src/conf"
 	"github.com/richelieu042/chimera/v3/src/core/sliceKit"
 	"github.com/richelieu042/chimera/v3/src/log/console"
 )
@@ -15,23 +17,24 @@ var (
 
 func main() {
 	/* 本地 - 跑商 */
-	{
-		addr = "127.0.0.1:5555"
-		//addr = "127.0.0.1:5585"
-		verbose = true
-		disableSail = false
-		disableBattle = true
-	}
-
-	/* 远程 - 跑商 */
 	//{
-	//	addr = "192.168.60.205:16384"
+	//	addr = "127.0.0.1:5555"
+	//
+	//	//addr = "127.0.0.1:5585"
 	//	verbose = true
 	//	disableSail = false
 	//	disableBattle = true
-	//
-	//	conf.SetDefSleepInterval(time.Millisecond * 10)
 	//}
+
+	/* 远程 - 跑商 */
+	{
+		addr = "192.168.60.205:16384"
+		verbose = true
+		disableSail = false
+		disableBattle = true
+
+		conf.SetDefSleepInterval(time.Millisecond * 10)
+	}
 
 	/* 海战 */
 	//{
