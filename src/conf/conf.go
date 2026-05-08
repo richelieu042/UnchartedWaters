@@ -6,6 +6,9 @@ var (
 	defSleepInterval = 1_300 * time.Millisecond
 
 	battleSleepInterval = 5_000 * time.Millisecond
+
+	// 匹配阈值 >=就认为是匹配的
+	matchValThreshold float32 = 0.82
 )
 
 func SetDefSleepInterval(interval time.Duration) {
@@ -18,4 +21,8 @@ func GetDefSleepInterval() time.Duration {
 
 func GetBattleSleepInterval() time.Duration {
 	return battleSleepInterval
+}
+
+func GetMatchValThreshold() float32 {
+	return matchValThreshold
 }

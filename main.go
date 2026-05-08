@@ -17,7 +17,7 @@ var (
 )
 
 func main() {
-	mode := 1
+	mode := 0
 
 	switch mode {
 	case 0: /* 本地 - 跑商 */

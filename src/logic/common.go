@@ -4,6 +4,7 @@ import (
 	"image"
 	"time"
 
+	"github.com/richelieu-yang/UnchartedWaters/src/conf"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/concurrency/rateLimitKit"
 	"github.com/richelieu042/chimera/v3/src/gocvKit"
@@ -37,7 +38,7 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 		return 0
 	}
 
-	if matchVal < 0.85 {
+	if matchVal < conf.GetMatchValThreshold() {
 		l.Debug("MatchVal is too low.", zap.String("op", op), zap.Float32("matchVal", matchVal))
 		return 1
 	}

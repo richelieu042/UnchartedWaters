@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/richelieu-yang/UnchartedWaters/src/conf"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/core/error/errKit"
 	"github.com/richelieu042/chimera/v3/src/randomKit"
@@ -22,7 +23,7 @@ func isBattling(logger *zap.Logger, imgPath string) (bool, error) {
 		return false, errKit.Wrapf(err, "fail to math with template(path: %s)", templPath)
 	}
 	logger.Sugar().Debugf("matchVal: [%.2f], op: [%s]", matchVal, op)
-	if matchVal < 0.8 {
+	if matchVal < conf.GetMatchValThreshold() {
 		logger.Debug("MatchVal is too low.", zap.Float32("matchVal", matchVal), zap.String("templPath", templPath))
 		return false, nil
 	}
