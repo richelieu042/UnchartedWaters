@@ -7,7 +7,7 @@ var (
 
 	battleSleepInterval = 5_000 * time.Millisecond
 
-	// 匹配阈值 >=就认为是匹配的
+	// matchValThreshold 匹配阈值，>=就认为是匹配的
 	matchValThreshold float32 = 0.82
 )
 
