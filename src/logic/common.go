@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"context"
 	"image"
 	"time"
 
@@ -56,5 +57,5 @@ func matchAndTap(adbClient adbKit.Client, l *zap.Logger, op, imgPath, templPath 
 
 func _tap(adbClient adbKit.Client, x, y int, axisOffset int) error {
 	opLimiter.Take() // 先等一会
-	return adbClient.TapAsHumanBeings(x, y, axisOffset)
+	return adbClient.TapAsHumanBeings(context.TODO(), x, y, axisOffset)
 }

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/command/cobraKit"
 	"github.com/richelieu042/chimera/v3/src/log/console"
@@ -21,7 +23,7 @@ func cleanRun(cmd *cobra.Command, args []string) {
 	}
 
 	logger := zapKit.NewSimpleConsoleLogger()
-	if err := adbKit.Clean(logger); err != nil {
+	if err := adbKit.Clean(context.TODO(), logger); err != nil {
 		console.Errorf("Clean failed, error %s", err)
 		return
 	}

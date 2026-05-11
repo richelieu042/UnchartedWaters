@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"context"
 	"time"
 
 	"github.com/richelieu-yang/UnchartedWaters/src/conf"
@@ -25,7 +26,7 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 	preSailing := false                                     // 上一次是否是在航行？
 
 	/* 尺寸，目前仅支持 1920x1080 */
-	w, h, err := adbClient.GetPhysicalSize()
+	w, h, err := adbClient.GetPhysicalSize(context.TODO())
 	if err != nil {
 		logger.Sugar().Panicf("Fail to get physical size, error: %+v", err)
 		return
@@ -82,9 +83,11 @@ func Start(adbClient adbKit.Client, logger *zap.Logger, disableSail, disableBatt
 		logger.Sugar().Infof("dirPath: [%s]", dirPath)
 
 		/* 截图（耗时不定: 远程adb的话耗时会较长） */
+		ctx, cancel := context.WithTimeout(context.TODO(), time.Second*15)
+		defer cancel()
 		imgPath := pathKit.Join(dirPath, "screenshot.png")
 		start := time.Now()
-		if err := adbClient.Screenshot(imgPath); err != nil {
+		if err := adbClient.Screenshot(ctx, imgPath); err != nil {
 			logger.Error("Screenshot() failed", zap.Error(err))
 			continue
 		}

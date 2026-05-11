@@ -16,9 +16,11 @@ var (
 	verbose, disableSail, disableBattle bool
 )
 
-func main() {
-	mode := 0
+const (
+	mode = 0
+)
 
+func main() {
 	switch mode {
 	case 0: /* 本地 - 跑商 */
 		addr = "127.0.0.1:5555"

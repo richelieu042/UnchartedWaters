@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/richelieu-yang/UnchartedWaters/src/log"
 	"github.com/richelieu-yang/UnchartedWaters/src/logic"
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
@@ -48,7 +50,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 	logger.Sugar().Infof("disableSail: [%t]", disableSail)
 	logger.Sugar().Infof("disableBattle: [%t]", disableBattle)
 
-	client, err := adbKit.NewClient(addr, clean, logger)
+	client, err := adbKit.NewClient(context.TODO(), addr, clean, logger)
 	if err != nil {
 		logger.Sugar().Panicf("Fail to new adb client, error: %+v", err)
 		return

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/richelieu042/chimera/v3/src/android/adbKit"
 	"github.com/richelieu042/chimera/v3/src/command/cobraKit"
 	"github.com/richelieu042/chimera/v3/src/log/console"
@@ -18,7 +20,7 @@ func checkRun(cmd *cobra.Command, args []string) {
 }
 
 func checkAdbEnv() (success bool) {
-	path, version, err := adbKit.Check()
+	path, version, err := adbKit.Check(context.TODO())
 	if err != nil {
 		console.Errorf("Check failed, error: %s", err)
 		return
