@@ -9,6 +9,8 @@ var (
 
 	// matchValThreshold 匹配阈值，>=就认为是匹配的
 	matchValThreshold float32 = 0.82
+
+	screenshotTimeout = time.Second * 15
 )
 
 func SetDefSleepInterval(interval time.Duration) {
@@ -25,4 +27,8 @@ func GetBattleSleepInterval() time.Duration {
 
 func GetMatchValThreshold() float32 {
 	return matchValThreshold
+}
+
+func GetScreenshotTimeout() time.Duration {
+	return screenshotTimeout
 }
