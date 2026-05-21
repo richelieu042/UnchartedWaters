@@ -20,8 +20,8 @@ var (
 )
 
 func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectangle, err error) {
-	//return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
-	return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed)
+	return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed, true)
+	//return gocvKit.MatchTemplate(imgPath, templPath, gocv.TmCcoeffNormed)
 }
 
 /*

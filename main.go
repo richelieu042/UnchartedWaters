@@ -17,7 +17,7 @@ var (
 )
 
 const (
-	mode = 1
+	mode = 0
 )
 
 func main() {

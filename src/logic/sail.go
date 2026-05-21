@@ -172,21 +172,5 @@ func processSailing(adbClient adbKit.Client, l *zap.Logger, imgPath string, days
 	}
 
 	// (4) 取消（右下角的）折叠
-	// TODO: 有时会误触，可能原因：折叠和取消折叠的按钮太像了
-	{
-		op := "cancel_fold"
-		templPath := "images/sail/folded.png"
-
-		flag := matchAndTap(adbClient, l, op, imgPath, templPath)
-		switch flag {
-		case 0, 2:
-			return
-		case 1:
-			// 未折叠，继续向下走
-		case 3:
-			return // 折叠已取消，等下个循环
-		default:
-			l.Panic("Unknown flag.", zap.String("op", op), zap.Int("flag", flag))
-		}
-	}
+	cancelFoldWhenSailing(adbClient, l, imgPath)
 }

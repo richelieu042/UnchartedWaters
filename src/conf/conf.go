@@ -1,6 +1,9 @@
 package conf
 
-import "time"
+import (
+	"image"
+	"time"
+)
 
 var (
 	defSleepInterval = 1_300 * time.Millisecond
@@ -11,6 +14,9 @@ var (
 	matchValThreshold float32 = 0.83
 
 	screenshotTimeout = time.Second * 15
+
+	// pointCancelFold 【航海页面】右下角的取消折叠按钮的中心位置
+	pointCancelFold = image.Pt(1829, 998)
 )
 
 func SetDefSleepInterval(interval time.Duration) {
@@ -31,4 +37,8 @@ func GetMatchValThreshold() float32 {
 
 func GetScreenshotTimeout() time.Duration {
 	return screenshotTimeout
+}
+
+func GetPointCancelFold() image.Point {
+	return pointCancelFold
 }
