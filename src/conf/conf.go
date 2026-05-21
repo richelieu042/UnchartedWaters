@@ -11,7 +11,7 @@ var (
 	battleSleepInterval = 5_000 * time.Millisecond
 
 	// matchValThreshold 匹配阈值，>=就认为是匹配的
-	matchValThreshold float32 = 0.83
+	matchValThreshold float32 = 0.84
 
 	screenshotTimeout = time.Second * 15
 
