@@ -55,13 +55,19 @@ loop:
 		select {
 		case <-ctx.Done():
 			// 条件 1：超过 3s（context timeout）
-			l.Warn("Timeout.", zap.String("op", op))
+			l.Warn("Context is done.", zap.String("op", op))
 			break loop
 
 		case res, ok := <-ch:
 			if !ok {
 				// 条件 2：channel 关闭 = 3 个 goroutine 都结束且没人发现结果
 				l.Warn("All workers end.", zap.String("op", op))
+				break loop
+			}
+
+			// 极端情况
+			if ctx.Err() != nil {
+				l.Warn("Context is done too.", zap.String("op", op))
 				break loop
 			}
 
