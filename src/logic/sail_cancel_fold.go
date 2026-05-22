@@ -67,7 +67,7 @@ loop:
 
 			// 极端情况
 			if ctx.Err() != nil {
-				l.Warn("Context is done too.", zap.String("op", op))
+				l.Warn("Context is done terrifically.", zap.String("op", op))
 				break loop
 			}
 
