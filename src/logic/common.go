@@ -16,7 +16,7 @@ import (
 
 var (
 	// opLimiter 限流器：避免短时间内操作太多次
-	opLimiter = rateLimitKit.NewUberLimiter(1, ratelimit.Per(600*time.Millisecond), ratelimit.WithoutSlack)
+	opLimiter = rateLimitKit.NewUberLimiter(1, ratelimit.Per(800*time.Millisecond), ratelimit.WithoutSlack)
 )
 
 func match(imgPath, templPath string) (matchVal float32, matchRect image.Rectangle, err error) {
