@@ -1,6 +1,6 @@
 module github.com/richelieu-yang/UnchartedWaters
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/richelieu042/chimera/v3 v3.26.153
